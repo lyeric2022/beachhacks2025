@@ -1,11 +1,19 @@
 import requests
 import json
 from datetime import datetime, timezone
+from dotenv import load_dotenv
+import os
+
+# Load environment variables
+load_dotenv()
 
 # === Configuration ===
-API_TOKEN = "ADD TOKEN HERE"
+CANVAS_API_TOKEN = os.getenv('CANVAS_API_TOKEN')
+if not CANVAS_API_TOKEN:
+    raise ValueError("CANVAS_API_TOKEN not found in environment variables")
+
 BASE_URL = "https://csulb.instructure.com/api/v1"
-HEADERS = {"Authorization": f"Bearer {API_TOKEN}"}
+HEADERS = {"Authorization": f"Bearer {CANVAS_API_TOKEN}"}
 
 # === Helper Functions ===
 
