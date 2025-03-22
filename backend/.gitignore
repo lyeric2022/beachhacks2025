@@ -1,0 +1,11 @@
+node_modules/
+.env
+.env.*
+dist/
+build/
+*.log
+.DS_Store
+
+*.pyc
+__pycache__/
+canvas_output.json
