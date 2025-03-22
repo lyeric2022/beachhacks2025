@@ -82,7 +82,6 @@ def main():
     output = {
         "user_profile": {},
         "courses": [],
-        "calendar_events": []  # You could also fetch these separately if needed.
     }
     
     # 1. Get user profile.
