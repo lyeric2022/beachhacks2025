@@ -1,0 +1,59 @@
+.container {
+    height: 100vh;
+    width: 100vw;
+    color: black;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.header {
+    background: red;
+}
+
+.content {
+    border: 2px solid red;
+    flex: 1;
+    display: flex;
+}
+
+.content > div {
+    border: 1px solid red;
+    flex: 1;
+    display: flex;
+    width: 50vw;
+    aspect-ratio: 1;
+    flex-direction: column;
+}
+
+
+.left {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+
+.left div {
+    border: 1px solid yellow;
+}
+
+.header {
+    background-color: yellow;
+}
+
+.timer {
+    background: green;
+    flex: 1;
+}
+
+.breaks {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+}
+
+.startreset {
+    display: flex;
+    justify-content: space-evenly;
+}
