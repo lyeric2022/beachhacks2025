@@ -1,0 +1,352 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding: 1.5rem 2rem;
+  min-height: 100vh;
+  background-color: #f9fafb;
+  background-image: linear-gradient(to bottom right, rgba(59, 130, 246, 0.05) 0%, rgba(139, 92, 246, 0.05) 100%);
+}
+
+.container::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: 
+    radial-gradient(circle at 25px 25px, rgba(59, 130, 246, 0.1) 2px, transparent 0),
+    radial-gradient(circle at 75px 75px, rgba(139, 92, 246, 0.1) 2px, transparent 0);
+  background-size: 100px 100px;
+  pointer-events: none;
+  opacity: 0.4;
+  z-index: -1;
+  animation: subtleShift 120s linear infinite;
+}
+
+@keyframes subtleShift {
+  0% {
+    background-position: 0% 0%;
+  }
+  100% {
+    background-position: 100px 100px;
+  }
+}
+
+.header {
+  display: flex;
+  flex-direction: column;
+  padding: 1rem 0 1.5rem;
+  border-bottom: 2px solid #e5e7eb;
+  margin-bottom: 2rem;
+  position: relative;
+}
+
+.headerTitle {
+  font-size: 1.875rem;
+  font-weight: 700;
+  color: #1f2937;
+  background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  position: relative;
+  display: inline-block;
+}
+
+.headerAccent {
+  position: absolute;
+  left: 0;
+  bottom: -10px;
+  width: 70px;
+  height: 4px;
+  background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+  border-radius: 4px;
+}
+
+.subheader {
+  color: #6b7280;
+  margin-top: 0.5rem;
+  font-size: 1rem;
+}
+
+.actionBar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.statsCards {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.statCard {
+  background: white;
+  border-radius: 0.75rem;
+  padding: 0.875rem 1.25rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  border: 1px solid #f3f4f6;
+  transition: all 0.3s ease;
+}
+
+.statCard:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+}
+
+.statIcon {
+  color: #8b5cf6;
+  opacity: 0.8;
+}
+
+.statTitle {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: #6b7280;
+  margin: 0;
+}
+
+.statValue {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #1f2937;
+  margin: 0;
+}
+
+.addButton {
+  display: flex;
+  align-items: center;
+  background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+  color: white;
+  font-weight: 600;
+  padding: 0.625rem 1.25rem;
+  border-radius: 9999px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 5px rgba(59, 130, 246, 0.3);
+}
+
+.addButton:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(59, 130, 246, 0.4);
+}
+
+.tableContainer {
+  background-color: white;
+  border-radius: 1rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.03), 0 1px 3px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+  transition: all 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  position: relative;
+}
+
+.tableContainer::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 150px;
+  height: 150px;
+  background: radial-gradient(circle at top right, rgba(59, 130, 246, 0.08), transparent 70%);
+  border-radius: 0 0 0 100%;
+  z-index: 0;
+  transition: all 0.3s ease;
+  pointer-events: none;
+}
+
+.tableContainer:hover::after {
+  width: 180px;
+  height: 180px;
+  background: radial-gradient(circle at top right, rgba(59, 130, 246, 0.12), transparent 70%);
+}
+
+.tabContainer {
+  display: flex;
+  padding: 1rem 1rem 0;
+  background-color: #f9fafb;
+  border-bottom: 1px solid #f3f4f6;
+  position: relative;
+  z-index: 1;
+}
+
+.tabButton {
+  display: flex;
+  align-items: center;
+  padding: 0.75rem 1.25rem;
+  font-weight: 500;
+  color: #6b7280;
+  border-radius: 0.5rem 0.5rem 0 0;
+  border: 1px solid transparent;
+  border-bottom: none;
+  margin-right: 0.5rem;
+  transition: all 0.2s ease;
+  background: transparent;
+  cursor: pointer;
+}
+
+.tabButton:hover:not(.activeTab) {
+  background-color: #f3f4f6;
+  color: #4b5563;
+}
+
+.activeTab {
+  background-color: white;
+  color: #3b82f6;
+  border-color: #f3f4f6;
+  border-bottom: 2px solid white;
+  margin-bottom: -1px;
+  position: relative;
+}
+
+.activeTab::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+}
+
+.tableRow {
+  transition: all 0.2s ease;
+}
+
+.tableRow:hover {
+  background-color: #f9fafb;
+}
+
+.tableCell {
+  padding: 1rem;
+}
+
+.completedRow {
+  opacity: 0.7;
+  background-color: rgba(243, 244, 246, 0.5);
+}
+
+.emptyState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem;
+  text-align: center;
+}
+
+.emptyIcon {
+  color: #d1d5db;
+  margin-bottom: 1rem;
+}
+
+.emptyTitle {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #6b7280;
+  margin-bottom: 0.5rem;
+}
+
+.emptyText {
+  color: #9ca3af;
+  margin-bottom: 1.5rem;
+  max-width: 300px;
+}
+
+.emptyButton {
+  display: flex;
+  align-items: center;
+  background: white;
+  color: #3b82f6;
+  font-weight: 500;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  border: 1px solid #e5e7eb;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.emptyButton:hover {
+  background-color: #f3f4f6;
+  border-color: #d1d5db;
+}
+
+.loadingState {
+  padding: 1rem;
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 1rem;
+  }
+  
+  .actionBar {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .statsCards {
+    width: 100%;
+    justify-content: space-between;
+  }
+  
+  .statCard {
+    flex: 1;
+    min-width: 100px;
+  }
+  
+  .addButton {
+    width: 100%;
+    justify-content: center;
+  }
+  
+  .tabContainer {
+    overflow-x: auto;
+    padding: 0.75rem 0.75rem 0;
+  }
+}
+
+/* Add shine effects to table container */
+.tableContainer::before {
+  content: "";
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(
+    to right,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.1) 50%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  transform: rotate(30deg);
+  opacity: 0;
+  transition: opacity 0.6s;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.tableContainer:hover::before {
+  opacity: 1;
+  animation: shine 1.5s ease;
+}
+
+@keyframes shine {
+  0% {
+    transform: translateX(-100%) rotate(30deg);
+  }
+  100% {
+    transform: translateX(100%) rotate(30deg);
+  }
+}

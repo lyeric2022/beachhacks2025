@@ -3,26 +3,15 @@ import { useEffect, useState } from "react";
 import {
   Table,
   TableBody,
-  TableCaption,
   TableCell,
-  TableFooter,
-  TableHead,
-  TableHeader,
   TableRow,
 } from "@/components/ui/table";
 import AssignmentCheckbox from "@/components/checkbox";
 import AddModal from "@/components/AddModal";
 import { fetchAssignmentsByUser } from "../api/assignmentApi";
 import { updateAssignmentStatus } from "../api/assignmentApi";
-import {
-  Pagination,
-  PaginationContent,
-  PaginationEllipsis,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
-} from "@/components/ui/pagination";
+import { PlusCircle, Book, CheckCircle, ClipboardList } from "lucide-react";
+import styles from "./assignments.module.css";
 
 const Assignment = () => {
   const [tab, setTab] = useState("All");
@@ -111,47 +100,98 @@ const Assignment = () => {
     tab === "All" ? assignments : assignments.filter((a) => a.status === tab);
 
   return (
-    <div className="container mx-10 my-10 overflow-scroll">
-      <div className="flex justify-between my-8">
-        <h1 className="font-bold text-2xl ">Assignments</h1>
+    <div className={styles.container}>
+      <div className={styles.header}>
+        <h1 className={styles.headerTitle}>
+          Assignments
+          <span className={styles.headerAccent}></span>
+        </h1>
+        <p className={styles.subheader}>Track and manage your academic tasks</p>
+      </div>
+      
+      <div className={styles.actionBar}>
+        <div className={styles.statsCards}>
+          <div className={styles.statCard}>
+            <ClipboardList size={20} className={styles.statIcon} />
+            <div>
+              <h3 className={styles.statTitle}>Total</h3>
+              <p className={styles.statValue}>{assignments.length}</p>
+            </div>
+          </div>
+          <div className={styles.statCard}>
+            <Book size={20} className={styles.statIcon} />
+            <div>
+              <h3 className={styles.statTitle}>In Progress</h3>
+              <p className={styles.statValue}>
+                {assignments.filter(a => a.status === "In Progress").length}
+              </p>
+            </div>
+          </div>
+          <div className={styles.statCard}>
+            <CheckCircle size={20} className={styles.statIcon} />
+            <div>
+              <h3 className={styles.statTitle}>Completed</h3>
+              <p className={styles.statValue}>
+                {assignments.filter(a => a.status === "Completed").length}
+              </p>
+            </div>
+          </div>
+        </div>
+        
         <button
           onClick={handleAddModal}
-          className="bg-zinc-600 rounded-full py-2 px-6  text-white font-semibold text-center cursor-pointer transition hover:bg-zinc-400"
+          className={styles.addButton}
         >
+          <PlusCircle size={18} className="mr-2" />
           Add Assignment
         </button>
       </div>
+      
       <AddModal
         open={addModal}
         onClose={handleAddModal}
         refreshAssignments={getData}
       />
-      <div className="border rounded-2xl my-4 ">
-        <div className="flex space-x-4 px-2 py-4 bg-zinc-50 rounded-t-2xl">
+      
+      <div className={styles.tableContainer}>
+        <div className={styles.tabContainer}>
           {["All", "In Progress", "Completed"].map((status) => (
             <button
               key={status}
               onClick={() => setTab(status)}
-              className={`cursor-pointer py-2 px-4 mx-2 rounded-xl transition hover:bg-zinc-200 ${
-                tab === status
-                  ? "bg-zinc-600 font-semibold text-white"
-                  : "bg-transparent"
+              className={`${styles.tabButton} ${
+                tab === status ? styles.activeTab : ""
               }`}
             >
+              {status === "All" && <ClipboardList size={16} className="mr-2" />}
+              {status === "In Progress" && <Book size={16} className="mr-2" />}
+              {status === "Completed" && <CheckCircle size={16} className="mr-2" />}
               {status}
             </button>
           ))}
         </div>
-        <hr />
-        {filteredAssignments.length > 0 ? (
+        
+        {loading ? (
+          <div className={styles.loadingState}>
+            {[1, 2, 3].map((i) => (
+              <div key={i} className="animate-pulse flex items-center p-4 border-b">
+                <div className="h-4 w-4 bg-gray-200 rounded-full mr-4"></div>
+                <div className="flex-1">
+                  <div className="h-5 bg-gray-200 rounded w-3/4 mb-2"></div>
+                  <div className="h-4 bg-gray-200 rounded w-1/2"></div>
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : filteredAssignments.length > 0 ? (
           <Table>
             <TableBody>
               {filteredAssignments.map((assignment) => (
-                <TableRow key={assignment.id}>
-                  <TableCell>
+                <TableRow key={assignment.id} className={styles.tableRow}>
+                  <TableCell className={styles.tableCell}>
                     <div
                       className={`${
-                        assignment.status === "Completed" ? "bg-zinc-100" : ""
+                        assignment.status === "Completed" ? styles.completedRow : ""
                       }`}
                     >
                       <AssignmentCheckbox
@@ -172,7 +212,21 @@ const Assignment = () => {
             </TableBody>
           </Table>
         ) : (
-          <h2 className="text-center text-gray-500">No assignments found</h2>
+          <div className={styles.emptyState}>
+            <ClipboardList size={40} className={styles.emptyIcon} />
+            <h2 className={styles.emptyTitle}>No assignments found</h2>
+            <p className={styles.emptyText}>
+              {tab === "All" 
+                ? "Add your first assignment to get started" 
+                : tab === "In Progress" 
+                  ? "No assignments in progress" 
+                  : "No completed assignments yet"}
+            </p>
+            <button onClick={handleAddModal} className={styles.emptyButton}>
+              <PlusCircle size={16} className="mr-2" />
+              Add Assignment
+            </button>
+          </div>
         )}
       </div>
     </div>
