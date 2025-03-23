@@ -1,26 +1,32 @@
+
 const assignmentService = require('../services/assignmentsService');
 const taskUtils = require('../routes/taskUtils');
 
+
 exports.getAssignmentByUser = async (req, res) => {
-    try {
-        console.log(req.query)
-        const users = await assignmentService.getAllAssignmentsByUser(req.query.user_id)
-        res.json(users);
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
+  try {
+    const users = await assignmentService.getAllAssignmentsByUser(
+      req.query.user_id
+    );
+    res.json(users);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
 };
 
 exports.getAssignmentByCourse = async (req, res) => {
-    try {
-        const users = await assignmentService.getAllAssignmentsByCourse("someUserId + courseId")
-        res.json(users);
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
+  try {
+    const users = await assignmentService.getAllAssignmentsByCourse(
+      "someUserId + courseId"
+    );
+    res.json(users);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
 };
 
 exports.createAssignment = async (req, res) => {
+
     try {
         console.log(req.body)
         const user = await assignmentService.addAssignment(req.body)
@@ -104,3 +110,4 @@ exports.getEventsByDate = async (req, res) => {
         res.status(500).json({ error: 'Failed to fetch events' });
     }
 };
+

@@ -1,31 +1,93 @@
 .container {
-    background-color: white;
-    width: 250px;
-    display: flex;
-    flex-direction: column;
-    padding: 10px;
+  background-color: white;
+  width: 250px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  padding: 16px;
+  border-right: 1px solid #eee;
 }
 
 .top {
-    height: 100%;
-}
-
-.buttons {
-    row-gap: 10px;
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    justify-content: center;
-    margin-top: 50px;
+  flex-grow: 1;
 }
 
 .logo {
-    font-size: 2rem;
-    font-weight: bolder;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 30px;
+}
+
+.logoIcon {
+  font-size: 1.5rem;
+}
+
+.logoText {
+  color: #333;
+}
+
+.buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 20px;
+}
+
+.navButton {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  border-radius: 6px;
+  font-weight: 500;
+  width: 100%;
+  text-align: left;
+}
+
+.navButton:hover:not([data-state="open"]) {
+  background-color: #7e7e7e;
+}
+
+.navButton[data-state="open"] {
+  background-color: #e6f0ff;
+  color: #0066ff;
+}
+
+.navIcon {
+  opacity: 0.7;
+}
+
+.navButton[data-state="open"] .navIcon {
+  opacity: 1;
+  color: #0066ff;
 }
 
 .bottom {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid #eee;
+}
+
+.accountButton {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  border-radius: 6px;
+  width: 100%;
+  text-align: left;
+}
+
+.accountButton:hover {
+  background-color: #f5f5f5;
+}
+
+.accountIcon {
+  opacity: 0.7;
 }

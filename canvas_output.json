@@ -1,0 +1,1087 @@
+{
+  "user_profile": {
+    "id": 55141,
+    "name": "Zophia Kimberly Laud",
+    "sortable_name": "Laud, Zophia Kimberly"
+  },
+  "courses": [
+    {
+      "id": 89242,
+      "name": "CECS 105 - Introduction to CECS (Sp 25 Tu)",
+      "overall_score": null,
+      "assignments": {
+        "upcoming": [
+          {
+            "id": 1306529,
+            "name": "Roll Call Attendance",
+            "due_at": null,
+            "points_possible": 100.0,
+            "assignment_type": [
+              "external_tool"
+            ],
+            "assignment_group": {
+              "group_name": "In-Class Activities",
+              "group_weight": 0.0
+            }
+          },
+          {
+            "id": 1307726,
+            "name": "Introduction",
+            "due_at": null,
+            "points_possible": 0.0,
+            "assignment_type": [
+              "none"
+            ],
+            "assignment_group": {
+              "group_name": "In-Class Activities",
+              "group_weight": 0.0
+            }
+          },
+          {
+            "id": 1330517,
+            "name": "VideoQuiz",
+            "due_at": null,
+            "points_possible": null,
+            "assignment_type": [
+              "none"
+            ],
+            "assignment_group": {
+              "group_name": "In-Class Activities",
+              "group_weight": 0.0
+            }
+          }
+        ],
+        "past": [
+          {
+            "id": 1316921,
+            "name": "Career",
+            "due_at": "2025-02-05T00:30:00Z",
+            "grade_info": {
+              "score": null,
+              "points_possible": 10.0
+            },
+            "assignment_type": [
+              "none"
+            ],
+            "assignment_group": {
+              "group_name": "In-Class Activities",
+              "group_weight": 0.0
+            }
+          },
+          {
+            "id": 1317097,
+            "name": "Career Options",
+            "due_at": "2025-02-05T00:30:00Z",
+            "grade_info": {
+              "score": null,
+              "points_possible": 10.0
+            },
+            "assignment_type": [
+              "discussion_topic"
+            ],
+            "assignment_group": {
+              "group_name": "In-Class Activities",
+              "group_weight": 0.0
+            }
+          },
+          {
+            "id": 1320262,
+            "name": "Statistics",
+            "due_at": "2025-02-12T07:59:00Z",
+            "grade_info": {
+              "score": null,
+              "points_possible": 10.0
+            },
+            "assignment_type": [
+              "discussion_topic"
+            ],
+            "assignment_group": {
+              "group_name": "In-Class Activities",
+              "group_weight": 0.0
+            }
+          },
+          {
+            "id": 1338152,
+            "name": "Automation",
+            "due_at": "2025-03-18T23:30:00Z",
+            "grade_info": {
+              "score": null,
+              "points_possible": 5.0
+            },
+            "assignment_type": [
+              "discussion_topic"
+            ],
+            "assignment_group": {
+              "group_name": "In-Class Activities",
+              "group_weight": 0.0
+            }
+          },
+          {
+            "id": 1307234,
+            "name": "CECS",
+            "due_at": "2025-01-29T00:30:00Z",
+            "grade_info": {
+              "score": null,
+              "points_possible": 0.0
+            },
+            "assignment_type": [
+              "online_quiz"
+            ],
+            "assignment_group": {
+              "group_name": "Quizzes",
+              "group_weight": 0.0
+            }
+          },
+          {
+            "id": 1321877,
+            "name": "IoT",
+            "due_at": "2025-02-19T00:20:00Z",
+            "grade_info": {
+              "score": null,
+              "points_possible": 10.0
+            },
+            "assignment_type": [
+              "online_quiz"
+            ],
+            "assignment_group": {
+              "group_name": "Final",
+              "group_weight": 0.0
+            }
+          },
+          {
+            "id": 1327790,
+            "name": "Sets",
+            "due_at": "2025-03-05T07:59:00Z",
+            "grade_info": {
+              "score": null,
+              "points_possible": 10.0
+            },
+            "assignment_type": [
+              "online_quiz"
+            ],
+            "assignment_group": {
+              "group_name": "Final",
+              "group_weight": 0.0
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": 97092,
+      "name": "CECS 325 Sec03 11229 System Programming",
+      "overall_score": null,
+      "assignments": {
+        "upcoming": [
+          {
+            "id": 1255187,
+            "name": "Worksheet 1",
+            "due_at": null,
+            "points_possible": 4.0,
+            "assignment_type": [
+              "none"
+            ],
+            "assignment_group": {
+              "group_name": "Worksheets",
+              "group_weight": 0.0
+            }
+          },
+          {
+            "id": 1255222,
+            "name": "Worksheet 2",
+            "due_at": null,
+            "points_possible": 4.0,
+            "assignment_type": [
+              "none"
+            ],
+            "assignment_group": {
+              "group_name": "Worksheets",
+              "group_weight": 0.0
+            }
+          },
+          {
+            "id": 1255221,
+            "name": "Worksheet 3",
+            "due_at": null,
+            "points_possible": 4.0,
+            "assignment_type": [
+              "none"
+            ],
+            "assignment_group": {
+              "group_name": "Worksheets",
+              "group_weight": 0.0
+            }
+          },
+          {
+            "id": 1255220,
+            "name": "Worksheet 4",
+            "due_at": null,
+            "points_possible": 4.0,
+            "assignment_type": [
+              "none"
+            ],
+            "assignment_group": {
+              "group_name": "Worksheets",
+              "group_weight": 0.0
+            }
+          },
+          {
+            "id": 1255218,
+            "name": "Worksheet 5",
+            "due_at": null,
+            "points_possible": 4.0,
+            "assignment_type": [
+              "none"
+            ],
+            "assignment_group": {
+              "group_name": "Worksheets",
+              "group_weight": 0.0
+            }
+          },
+          {
+            "id": 1255219,
+            "name": "Worksheet 6",
+            "due_at": null,
+            "points_possible": 4.0,
+            "assignment_type": [
+              "none"
+            ],
+            "assignment_group": {
+              "group_name": "Worksheets",
+              "group_weight": 0.0
+            }
+          },
+          {
+            "id": 1255234,
+            "name": "Worksheet 7",
+            "due_at": null,
+            "points_possible": 4.0,
+            "assignment_type": [
+              "none"
+            ],
+            "assignment_group": {
+              "group_name": "Worksheets",
+              "group_weight": 0.0
+            }
+          },
+          {
+            "id": 1255253,
+            "name": "Worksheet 8",
+            "due_at": null,
+            "points_possible": 4.0,
+            "assignment_type": [
+              "none"
+            ],
+            "assignment_group": {
+              "group_name": "Worksheets",
+              "group_weight": 0.0
+            }
+          },
+          {
+            "id": 1254475,
+            "name": "Homework 0",
+            "due_at": null,
+            "points_possible": 0.0,
+            "assignment_type": [
+              "none"
+            ],
+            "assignment_group": {
+              "group_name": "Homework",
+              "group_weight": 0.0
+            }
+          },
+          {
+            "id": 1254476,
+            "name": "Homework 1",
+            "due_at": null,
+            "points_possible": 4.0,
+            "assignment_type": [
+              "none"
+            ],
+            "assignment_group": {
+              "group_name": "Homework",
+              "group_weight": 0.0
+            }
+          },
+          {
+            "id": 1255099,
+            "name": "Homework 2",
+            "due_at": null,
+            "points_possible": 8.0,
+            "assignment_type": [
+              "none"
+            ],
+            "assignment_group": {
+              "group_name": "Homework",
+              "group_weight": 0.0
+            }
+          },
+          {
+            "id": 1255142,
+            "name": "Homework 3",
+            "due_at": null,
+            "points_possible": 8.0,
+            "assignment_type": [
+              "none"
+            ],
+            "assignment_group": {
+              "group_name": "Homework",
+              "group_weight": 0.0
+            }
+          },
+          {
+            "id": 1255145,
+            "name": "Homework 4",
+            "due_at": null,
+            "points_possible": 12.0,
+            "assignment_type": [
+              "none"
+            ],
+            "assignment_group": {
+              "group_name": "Homework",
+              "group_weight": 0.0
+            }
+          },
+          {
+            "id": 1255147,
+            "name": "Homework 5",
+            "due_at": null,
+            "points_possible": 8.0,
+            "assignment_type": [
+              "none"
+            ],
+            "assignment_group": {
+              "group_name": "Homework",
+              "group_weight": 0.0
+            }
+          },
+          {
+            "id": 1255151,
+            "name": "Homework 6",
+            "due_at": null,
+            "points_possible": 8.0,
+            "assignment_type": [
+              "none"
+            ],
+            "assignment_group": {
+              "group_name": "Homework",
+              "group_weight": 0.0
+            }
+          },
+          {
+            "id": 1255149,
+            "name": "Homework 7",
+            "due_at": null,
+            "points_possible": 8.0,
+            "assignment_type": [
+              "none"
+            ],
+            "assignment_group": {
+              "group_name": "Homework",
+              "group_weight": 0.0
+            }
+          },
+          {
+            "id": 1255155,
+            "name": "Homework 8",
+            "due_at": null,
+            "points_possible": 4.0,
+            "assignment_type": [
+              "none"
+            ],
+            "assignment_group": {
+              "group_name": "Homework",
+              "group_weight": 0.0
+            }
+          },
+          {
+            "id": 1255157,
+            "name": "Project",
+            "due_at": null,
+            "points_possible": 20.0,
+            "assignment_type": [
+              "none"
+            ],
+            "assignment_group": {
+              "group_name": "Project",
+              "group_weight": 0.0
+            }
+          },
+          {
+            "id": 1227036,
+            "name": "Midterm 1",
+            "due_at": null,
+            "points_possible": 20.0,
+            "assignment_type": [
+              "none"
+            ],
+            "assignment_group": {
+              "group_name": "Exams",
+              "group_weight": 0.0
+            }
+          },
+          {
+            "id": 1255160,
+            "name": "Midterm 2",
+            "due_at": null,
+            "points_possible": 20.0,
+            "assignment_type": [
+              "none"
+            ],
+            "assignment_group": {
+              "group_name": "Exams",
+              "group_weight": 0.0
+            }
+          },
+          {
+            "id": 1255186,
+            "name": "Final Exam",
+            "due_at": null,
+            "points_possible": 24.0,
+            "assignment_type": [
+              "none"
+            ],
+            "assignment_group": {
+              "group_name": "Exams",
+              "group_weight": 0.0
+            }
+          }
+        ],
+        "past": []
+      }
+    },
+    {
+      "id": 89533,
+      "name": "CECS 329 Sec03 7961 Concepts Computer Sci Theory",
+      "overall_score": 93.1,
+      "assignments": {
+        "upcoming": [
+          {
+            "id": 1315472,
+            "name": "Pop Quiz 0",
+            "due_at": null,
+            "points_possible": 7.0,
+            "assignment_type": [
+              "online_quiz"
+            ],
+            "assignment_group": {
+              "group_name": "Pop Quizzes",
+              "group_weight": 15.0
+            }
+          },
+          {
+            "id": 1237744,
+            "name": "Pop Quiz 1",
+            "due_at": null,
+            "points_possible": 3.0,
+            "assignment_type": [
+              "online_quiz"
+            ],
+            "assignment_group": {
+              "group_name": "Pop Quizzes",
+              "group_weight": 15.0
+            }
+          },
+          {
+            "id": 1237747,
+            "name": "Pop Quiz 2",
+            "due_at": null,
+            "points_possible": 3.0,
+            "assignment_type": [
+              "online_quiz"
+            ],
+            "assignment_group": {
+              "group_name": "Pop Quizzes",
+              "group_weight": 15.0
+            }
+          },
+          {
+            "id": 1237740,
+            "name": "Pop Quiz 3",
+            "due_at": null,
+            "points_possible": 3.0,
+            "assignment_type": [
+              "online_quiz"
+            ],
+            "assignment_group": {
+              "group_name": "Pop Quizzes",
+              "group_weight": 15.0
+            }
+          },
+          {
+            "id": 1237739,
+            "name": "Pop Quiz 4",
+            "due_at": null,
+            "points_possible": 3.0,
+            "assignment_type": [
+              "online_quiz"
+            ],
+            "assignment_group": {
+              "group_name": "Pop Quizzes",
+              "group_weight": 15.0
+            }
+          },
+          {
+            "id": 1237755,
+            "name": "Extra Credit 1",
+            "due_at": "2025-05-10T06:59:59Z",
+            "points_possible": 1.0,
+            "assignment_type": [
+              "none"
+            ],
+            "assignment_group": {
+              "group_name": "Extra Credit",
+              "group_weight": 10.0
+            }
+          },
+          {
+            "id": 1237756,
+            "name": "Extra Credit 2",
+            "due_at": "2025-05-10T06:59:00Z",
+            "points_possible": 1.0,
+            "assignment_type": [
+              "none"
+            ],
+            "assignment_group": {
+              "group_name": "Extra Credit",
+              "group_weight": 10.0
+            }
+          },
+          {
+            "id": 1237758,
+            "name": "Midterm 1 Exam",
+            "due_at": null,
+            "points_possible": 63.0,
+            "assignment_type": [
+              "external_tool"
+            ],
+            "assignment_group": {
+              "group_name": "Midterm Exams",
+              "group_weight": 40.0
+            }
+          }
+        ],
+        "past": [
+          {
+            "id": 1237751,
+            "name": "Assignment 1",
+            "due_at": "2025-02-26T20:30:00Z",
+            "grade_info": {
+              "score": 9.0,
+              "points_possible": 10.0,
+              "percentage": 90.0
+            },
+            "assignment_type": [
+              "online_text_entry",
+              "online_upload"
+            ],
+            "assignment_group": {
+              "group_name": "Assignments",
+              "group_weight": 20.0
+            }
+          },
+          {
+            "id": 1237752,
+            "name": "Assignment 2",
+            "due_at": "2025-03-19T19:30:00Z",
+            "grade_info": {
+              "score": null,
+              "points_possible": 10.0
+            },
+            "assignment_type": [
+              "online_upload"
+            ],
+            "assignment_group": {
+              "group_name": "Assignments",
+              "group_weight": 20.0
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": 89635,
+      "name": "CECS 448 Sec01 7601 User Interface Design",
+      "overall_score": 95.83,
+      "assignments": {
+        "upcoming": [
+          {
+            "id": 1264619,
+            "name": "Project 5-  Flight Planner",
+            "due_at": "2025-03-24T06:59:59Z",
+            "points_possible": 10.0,
+            "assignment_type": [
+              "online_upload"
+            ],
+            "assignment_group": {
+              "group_name": "Project",
+              "group_weight": 50.0
+            }
+          },
+          {
+            "id": 1264624,
+            "name": "Roll Call Attendance",
+            "due_at": null,
+            "points_possible": 100.0,
+            "assignment_type": [
+              "external_tool"
+            ],
+            "assignment_group": {
+              "group_name": "Participation",
+              "group_weight": 15.0
+            }
+          }
+        ],
+        "past": [
+          {
+            "id": 1264616,
+            "name": "Project 1- Form",
+            "due_at": "2025-02-17T07:59:59Z",
+            "grade_info": {
+              "score": 10.0,
+              "points_possible": 10.0,
+              "percentage": 100.0
+            },
+            "assignment_type": [
+              "online_upload"
+            ],
+            "assignment_group": {
+              "group_name": "Project",
+              "group_weight": 50.0
+            }
+          },
+          {
+            "id": 1264617,
+            "name": "Project 3 - Stop Watch",
+            "due_at": "2025-03-03T07:59:59Z",
+            "grade_info": {
+              "score": 9.0,
+              "points_possible": 10.0,
+              "percentage": 90.0
+            },
+            "assignment_type": [
+              "online_upload"
+            ],
+            "assignment_group": {
+              "group_name": "Project",
+              "group_weight": 50.0
+            }
+          },
+          {
+            "id": 1264618,
+            "name": "Project 4 - Password",
+            "due_at": "2025-03-10T06:59:59Z",
+            "grade_info": {
+              "score": 9.0,
+              "points_possible": 10.0,
+              "percentage": 90.0
+            },
+            "assignment_type": [
+              "online_upload"
+            ],
+            "assignment_group": {
+              "group_name": "Project",
+              "group_weight": 50.0
+            }
+          },
+          {
+            "id": 1264620,
+            "name": "Project 2- Interface Presentation",
+            "due_at": "2025-02-24T07:59:59Z",
+            "grade_info": {
+              "score": null,
+              "points_possible": 20.0
+            },
+            "assignment_type": [
+              "online_upload"
+            ],
+            "assignment_group": {
+              "group_name": "Project",
+              "group_weight": 50.0
+            }
+          },
+          {
+            "id": 1264580,
+            "name": "Quiz1- Chapter 1",
+            "due_at": "2025-02-03T07:59:00Z",
+            "grade_info": {
+              "score": 10.0,
+              "points_possible": 10.0,
+              "percentage": 100.0
+            },
+            "assignment_type": [
+              "online_quiz"
+            ],
+            "assignment_group": {
+              "group_name": "Quiz",
+              "group_weight": 5.0
+            }
+          },
+          {
+            "id": 1264581,
+            "name": "Quiz 2 - Chapter 3",
+            "due_at": "2025-02-10T07:59:00Z",
+            "grade_info": {
+              "score": 10.0,
+              "points_possible": 10.0,
+              "percentage": 100.0
+            },
+            "assignment_type": [
+              "online_quiz"
+            ],
+            "assignment_group": {
+              "group_name": "Quiz",
+              "group_weight": 5.0
+            }
+          },
+          {
+            "id": 1264582,
+            "name": "Quiz 3",
+            "due_at": "2025-03-03T07:59:00Z",
+            "grade_info": {
+              "score": 10.0,
+              "points_possible": 10.0,
+              "percentage": 100.0
+            },
+            "assignment_type": [
+              "online_quiz"
+            ],
+            "assignment_group": {
+              "group_name": "Quiz",
+              "group_weight": 5.0
+            }
+          },
+          {
+            "id": 1264583,
+            "name": "Midterm Quiz",
+            "due_at": "2025-03-07T19:00:00Z",
+            "grade_info": {
+              "score": 30.0,
+              "points_possible": 30.0,
+              "percentage": 100.0
+            },
+            "assignment_type": [
+              "online_quiz"
+            ],
+            "assignment_group": {
+              "group_name": "Midterm",
+              "group_weight": 10.0
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": 90706,
+      "name": "CECS 491A Sec01 6124 Computer Sci Senior Project I",
+      "overall_score": 90.36,
+      "assignments": {
+        "upcoming": [
+          {
+            "id": 1268624,
+            "name": "List of Objects",
+            "due_at": "2025-03-27T06:59:00Z",
+            "points_possible": 100.0,
+            "assignment_type": [
+              "online_upload"
+            ],
+            "assignment_group": {
+              "group_name": "List of Objects",
+              "group_weight": 5.0
+            }
+          },
+          {
+            "id": 1268623,
+            "name": "List of Entity Methods",
+            "due_at": "2025-04-10T06:59:00Z",
+            "points_possible": 100.0,
+            "assignment_type": [
+              "online_upload"
+            ],
+            "assignment_group": {
+              "group_name": "List of Entity Methods",
+              "group_weight": 5.0
+            }
+          },
+          {
+            "id": 1268621,
+            "name": "Class Diagram",
+            "due_at": "2025-04-17T06:59:00Z",
+            "points_possible": 100.0,
+            "assignment_type": [
+              "online_upload"
+            ],
+            "assignment_group": {
+              "group_name": "Class Diagram",
+              "group_weight": 5.0
+            }
+          },
+          {
+            "id": 1268631,
+            "name": "Sequence Diagrams",
+            "due_at": "2025-04-29T06:59:00Z",
+            "points_possible": 100.0,
+            "assignment_type": [
+              "online_upload"
+            ],
+            "assignment_group": {
+              "group_name": "Sequence Diagram",
+              "group_weight": 10.0
+            }
+          },
+          {
+            "id": 1268627,
+            "name": "Presentation Powerpoint Slides",
+            "due_at": "2025-05-05T06:59:00Z",
+            "points_possible": 100.0,
+            "assignment_type": [
+              "online_upload"
+            ],
+            "assignment_group": {
+              "group_name": "Class Presentation",
+              "group_weight": 10.0
+            }
+          },
+          {
+            "id": 1268622,
+            "name": "Lessons Learned Paper",
+            "due_at": "2025-05-12T19:30:00Z",
+            "points_possible": 100.0,
+            "assignment_type": [
+              "online_upload"
+            ],
+            "assignment_group": {
+              "group_name": "Lessons Learned paper",
+              "group_weight": 10.0
+            }
+          },
+          {
+            "id": 1268625,
+            "name": "Midterm",
+            "due_at": null,
+            "points_possible": 100.0,
+            "assignment_type": [
+              "external_tool"
+            ],
+            "assignment_group": {
+              "group_name": "Midterm",
+              "group_weight": 20.0
+            }
+          },
+          {
+            "id": 1268630,
+            "name": "Roll Call Attendance",
+            "due_at": null,
+            "points_possible": 100.0,
+            "assignment_type": [
+              "external_tool"
+            ],
+            "assignment_group": {
+              "group_name": "Attendance",
+              "group_weight": 5.0
+            }
+          }
+        ],
+        "past": [
+          {
+            "id": 1268632,
+            "name": "Teams",
+            "due_at": "2025-01-29T22:00:00Z",
+            "grade_info": {
+              "score": null,
+              "points_possible": 0.0
+            },
+            "assignment_type": [
+              "online_upload"
+            ],
+            "assignment_group": {
+              "group_name": "Teams",
+              "group_weight": 0.0
+            }
+          },
+          {
+            "id": 1268629,
+            "name": "RFP",
+            "due_at": "2025-02-13T07:59:00Z",
+            "grade_info": {
+              "score": 100.0,
+              "points_possible": 100.0,
+              "percentage": 100.0
+            },
+            "assignment_type": [
+              "online_upload"
+            ],
+            "assignment_group": {
+              "group_name": "RFP",
+              "group_weight": 5.0
+            }
+          },
+          {
+            "id": 1268633,
+            "name": "Use Cases",
+            "due_at": "2025-03-06T07:59:00Z",
+            "grade_info": {
+              "score": 100.0,
+              "points_possible": 100.0,
+              "percentage": 100.0
+            },
+            "assignment_type": [
+              "online_upload"
+            ],
+            "assignment_group": {
+              "group_name": "Use Cases",
+              "group_weight": 10.0
+            }
+          },
+          {
+            "id": 1268628,
+            "name": "RAD / SRS",
+            "due_at": "2025-03-18T06:59:00Z",
+            "grade_info": {
+              "score": 100.0,
+              "points_possible": 100.0,
+              "percentage": 100.0
+            },
+            "assignment_type": [
+              "online_upload"
+            ],
+            "assignment_group": {
+              "group_name": "Systems Requirements Specification",
+              "group_weight": 15.0
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": 90519,
+      "name": "E E 381 Sec05 10946 Prblity & Stats Computing",
+      "overall_score": 93.27,
+      "assignments": {
+        "upcoming": [
+          {
+            "id": 1313407,
+            "name": "Roll Call Attendance",
+            "due_at": null,
+            "points_possible": 100.0,
+            "assignment_type": [
+              "external_tool"
+            ],
+            "assignment_group": {
+              "group_name": "Final Exam ",
+              "group_weight": 20.0
+            }
+          },
+          {
+            "id": 1328807,
+            "name": "Midterm Exam ",
+            "due_at": null,
+            "points_possible": 0.0,
+            "assignment_type": [
+              "online_text_entry"
+            ],
+            "assignment_group": {
+              "group_name": "Midterm Exam ",
+              "group_weight": 20.0
+            }
+          },
+          {
+            "id": 1328803,
+            "name": "Quiz 1 ",
+            "due_at": null,
+            "points_possible": 10.0,
+            "assignment_type": [
+              "online_text_entry"
+            ],
+            "assignment_group": {
+              "group_name": "Lecture Quiz ",
+              "group_weight": 25.0
+            }
+          },
+          {
+            "id": 1328804,
+            "name": "Quiz 2 ",
+            "due_at": null,
+            "points_possible": 10.0,
+            "assignment_type": [
+              "online_text_entry"
+            ],
+            "assignment_group": {
+              "group_name": "Lecture Quiz ",
+              "group_weight": 25.0
+            }
+          }
+        ],
+        "past": [
+          {
+            "id": 1318054,
+            "name": "HW 1 ",
+            "due_at": "2025-02-15T07:59:59Z",
+            "grade_info": {
+              "score": 10.0,
+              "points_possible": 10.0,
+              "percentage": 100.0
+            },
+            "assignment_type": [
+              "online_upload"
+            ],
+            "assignment_group": {
+              "group_name": "Homework ",
+              "group_weight": 10.0
+            }
+          },
+          {
+            "id": 1322040,
+            "name": "HW 2 ",
+            "due_at": "2025-02-22T07:59:59Z",
+            "grade_info": {
+              "score": 10.0,
+              "points_possible": 10.0,
+              "percentage": 100.0
+            },
+            "assignment_type": [
+              "online_upload"
+            ],
+            "assignment_group": {
+              "group_name": "Homework ",
+              "group_weight": 10.0
+            }
+          },
+          {
+            "id": 1328802,
+            "name": "HW 3 ",
+            "due_at": "2025-03-08T07:59:59Z",
+            "grade_info": {
+              "score": null,
+              "points_possible": 10.0
+            },
+            "assignment_type": [
+              "online_upload"
+            ],
+            "assignment_group": {
+              "group_name": "Homework ",
+              "group_weight": 10.0
+            }
+          },
+          {
+            "id": 1308374,
+            "name": "Get to Know You Survey ",
+            "due_at": "2025-02-01T07:59:00Z",
+            "grade_info": {
+              "score": 5.0,
+              "points_possible": 5.0,
+              "percentage": 100.0
+            },
+            "assignment_type": [
+              "online_quiz"
+            ],
+            "assignment_group": {
+              "group_name": "in class work, participation, attendance ",
+              "group_weight": 10.0
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

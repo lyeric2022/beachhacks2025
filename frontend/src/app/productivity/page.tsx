@@ -1,19 +1,50 @@
-"use client"
+"use client";
 
 import React, { useState, useEffect } from "react";
-import styles from "./page.module.css"
-import { Button } from "@/components/ui/button"
-import { CircularProgressbar } from 'react-circular-progressbar';
-import 'react-circular-progressbar/dist/styles.css';
+import styles from "./page.module.css";
+import { Button } from "@/components/ui/button";
+import { CircularProgressbar } from "react-circular-progressbar";
+import "react-circular-progressbar/dist/styles.css";
+import TimerTaskCard from "@/components/TaskTimerCard";
+import { fetchSessionsByUser } from "../api/sessionApi";
+
+const TIMER_PRESETS = {
+  pomodoro: 25 * 60,
+  short: 5 * 60,
+  long: 15 * 60,
+};
 
 const page = () => {
-  const initialTime = 300;
+  const [mode, setMode] = useState<"pomodoro" | "short" | "long">("pomodoro");
+  const [initialTime, setInitialTime] = useState(TIMER_PRESETS[mode]);
   const [remainingTime, setRemainingTime] = useState(initialTime);
   const [progress, setProgress] = useState(100);
-  const [isPaused, setIsPaused] = useState(false)
+  const [isPaused, setIsPaused] = useState(true);
+  const [sessions, setSessions] = useState(0);
+  const [tasks, setTasks] = useState([]);
 
   useEffect(() => {
-    let interval: any
+    const loadSessions = async () => {
+      try {
+        const userId = 55141; // Replace with actual auth user ID
+        const data = await fetchSessionsByUser(userId);
+        setTasks(data);
+      } catch (error) {
+        console.error("Error fetching sessions:", error);
+      }
+    };
+    loadSessions();
+  }, []);
+
+  useEffect(() => {
+    setInitialTime(TIMER_PRESETS[mode]);
+    setRemainingTime(TIMER_PRESETS[mode]);
+    setProgress(100);
+    setIsPaused(true); // Pause when switching mode
+  }, [mode]);
+
+  useEffect(() => {
+    let interval: any;
 
     if (!isPaused) {
       interval = setInterval(() => {
@@ -25,22 +56,14 @@ const page = () => {
           return prevTime - 1;
         });
       }, 1000);
-    } else {
-      console.log("clearing interval")
-      return () => clearInterval(interval);
     }
-
-    return () => {
-      if (interval) {
-        clearInterval(interval); // Clean up interval on unmount
-      }
-    };
-  }, [isPaused]);
+    return () => clearInterval(interval);
+  }, [isPaused, mode]);
 
   useEffect(() => {
     const progressValue = (remainingTime / initialTime) * 100;
     setProgress(progressValue);
-  }, [remainingTime]);
+  }, [remainingTime, initialTime]);
 
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
@@ -49,9 +72,13 @@ const page = () => {
   };
 
   const toggleTimer = () => {
-    console.log("toggling")
-    setIsPaused(prev => !prev)
-  }
+    console.log("toggling");
+    setIsPaused((prev) => !prev);
+  };
+
+  const handleModeChange = (newMode: "pomodoro" | "short" | "long") => {
+    setMode(newMode);
+  };
 
   return (
     <div className={`${styles.container}`}>
@@ -70,28 +97,54 @@ const page = () => {
                 </div>
               </div>
               <div className={styles.breaks}>
-                <Button style={{ width: "25%" }} variant="outline">Pomodoro</Button>
-                <Button style={{ width: "25%" }} variant="ghost">Short Break</Button>
-                <Button style={{ width: "25%" }} variant="ghost">Long Break</Button>
+                <Button
+                  style={{ width: "25%" }}
+                  variant={mode === "pomodoro" ? "default" : "ghost"}
+                  onClick={() => handleModeChange("pomodoro")}
+                >
+                  Pomodoro
+                </Button>
+                <Button
+                  style={{ width: "25%" }}
+                  variant={mode === "short" ? "default" : "ghost"}
+                  onClick={() => handleModeChange("short")}
+                >
+                  Short Break
+                </Button>
+                <Button
+                  style={{ width: "25%" }}
+                  variant={mode === "long" ? "default" : "ghost"}
+                  onClick={() => handleModeChange("long")}
+                >
+                  Long Break
+                </Button>
               </div>
               <div className={styles.startreset}>
-                {isPaused ? <Button onClick={toggleTimer}>Start</Button> : <Button variant="outline" onClick={toggleTimer}>Pause</Button>}
-                
+                {isPaused ? (
+                  <Button onClick={toggleTimer}>Start</Button>
+                ) : (
+                  <Button variant="outline" onClick={toggleTimer}>
+                    Pause
+                  </Button>
+                )}
               </div>
-              <div className={styles.sessions}>Sessions Completed</div>
+              {mode === "pomodoro" && (
+                <div className={styles.sessions}>
+                  Sessions Completed: <strong>{sessions}</strong>
+                </div>
+              )}
             </div>
           </div>
-          <div>
-            <div className={styles.left}>
-              <div className={styles.headerinner}>Reflection Journal</div>
-              <div className={styles.timertwo}>Reflection Prompt</div>
-              <div className={styles.timertwo}>Timer</div>
-
-              <div className={styles.startresettwo}>
-                <Button>Save Entry</Button>
-              </div>
-              <div className={styles.timertwo}>AI Productivity Insights</div>
-            </div>
+          <div className="space-y-4">
+            {tasks.map((task) => (
+              <TimerTaskCard
+                key={task.id}
+                task={task}
+                onUpdate={(updatedTask) => {
+                  console.log("📝 Updated Task:", updatedTask);
+                }}
+              />
+            ))}
           </div>
         </div>
       </div>
