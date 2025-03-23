@@ -1,11 +1,11 @@
 .container {
     height: 100vh;
     width: 100vw;
-    color: black;
     display: flex;
     justify-content: center;
     flex-direction: column;
     padding: 20px;
+    background-color: #f4f4f5;
 }
 
 .header {
@@ -26,36 +26,46 @@
 }
 
 .content>div {
+    padding: 10px;
     border-radius: 15px;
     flex: 1;
     display: flex;
     aspect-ratio: 1;
     flex-direction: column;
     box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+    background-color: #fafafa;
 }
 
 
 .left {
+    width: 100%;
     height: 100%;
     display: flex;
     flex-direction: column;
     padding: 10px;
     row-gap: 10px;
-    justify-content: center;
+}
+
+.left > div {
+    flex: 1;
 }
 
 .sessions {
     text-align: center;
 }
 
-
-.left div {}
-
-
 .timer {
-    border-radius: 10px;
-    flex: 1;
-    border: 1px solid black;
+    display: flex;
+    justify-content: center;
+    padding: 20px 0;
+}
+
+.timerInner {
+    max-width: 50%;
+}
+
+.timerInner > div {
+    flex: 1 1 0
 }
 
 .timertwo {
@@ -82,4 +92,3 @@
     justify-content: flex-end;
     column-gap: 20px;
 }
-
