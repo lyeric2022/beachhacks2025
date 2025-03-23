@@ -13,3 +13,6 @@ canvas_output.json
 
 node_modules/
 .env
+
+/*.html
+/*.png
