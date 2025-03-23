@@ -45,7 +45,9 @@ const deleteAssignment = async (id) => { }
 const getUpcomingAssignments = async (userId) => {
     const supabase = await getDbInstance()
     const now = new Date().toISOString()
-    
+    console.log("upcoming assignments")
+    console.log(now)
+    console.log(userId)
     const { data, error } = await supabase
         .from("assignments")
         .select("*")
@@ -53,12 +55,18 @@ const getUpcomingAssignments = async (userId) => {
         .gte("due_date", now)
         .order("due_date", { ascending: true })
 
-        console.log(data)
+        //
+        // console.log(data)
 
     if (error) {
         console.error("Error fetching upcoming assignments:", error)
         return []
     }
+
+    console.log(data.map(assignment => ({
+        ...assignment,
+        assignment_type: [assignment.assignment_type || 'homework']
+    })))
 
     return data.map(assignment => ({
         ...assignment,

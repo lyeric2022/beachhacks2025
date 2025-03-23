@@ -1,4 +1,5 @@
 const assignmentService = require('../services/assignmentsService');
+const taskUtils = require('../routes/taskUtils');
 
 exports.getAssignmentByUser = async (req, res) => {
     try {
@@ -56,11 +57,23 @@ exports.getCourseGrade = async (req, res) => {
 
 exports.getTodayEvents = async (req, res) => {
     try {
-        const userId = req.user.id;
-        const events = await EventsService.getTodayEvents(userId);
+        const userId = req.query.user_id;
+        const events = await assignmentService.getTodayEvents(userId);
         res.json(events);
     } catch (error) {
         console.error('Error in getTodayEvents:', error);
+        res.status(500).json({ error: 'Failed to fetch today\'s events' });
+    }
+};
+
+exports.getDailyAgenda = async (req, res) => {
+    try {
+        const userId = req.query.user_id;
+        console.log("getting dailty agenda")
+        const events = await taskUtils.getDailyAgenda(userId);
+        res.json(events);
+    } catch (error) {
+        console.error('Error in getDailyAgenda:', error);
         res.status(500).json({ error: 'Failed to fetch today\'s events' });
     }
 };

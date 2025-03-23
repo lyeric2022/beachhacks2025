@@ -1,4 +1,6 @@
 const axios = require('axios');
+const { getTodayEvents, getUpcomingAssignments } = require('../services/assignmentsService');
+
 
 /**
  * @typedef {Object} Assignment
@@ -29,10 +31,12 @@ const axios = require('axios');
  * Fetches all upcoming assignments from the REST API
  * @returns {Promise<Assignment[]>} List of upcoming assignments
  */
-async function getTaskList() {
+async function getTaskList(userId) {
   try {
-    const response = await axios.get('/api/assignments/upcoming');
-    return response.data;
+    const response = await getUpcomingAssignments(userId);
+    console.log("task list")
+    console.log(response)
+    return response;
   } catch (error) {
     console.error('Error fetching task list:', error);
     return [];
@@ -65,13 +69,13 @@ function getPriorityScore(dueDate) {
  */
 async function getPriorityScoreFromTask(assignment) {
   try {
-    if (!assignment.course_grade) {
-      const response = await axios.get(`/api/assignments/courses/${assignment.course_id}/grade`);
-      assignment.course_grade = response.data.grade;
-    }
+    // if (!assignment.course_grade) {
+    //   const response = await axios.get(`/api/assignments/courses/${assignment.course_id}/grade`);
+    //   assignment.course_grade = response.data.grade;
+    // }
     
     const dueDate = assignment.due_at ? new Date(assignment.due_at) : new Date();
-    return getPriorityScore(dueDate, assignment.course_grade);
+    return getPriorityScore(dueDate);
   } catch (error) {
     console.error('Error calculating priority score:', error);
     return 0;
@@ -133,14 +137,18 @@ function getEstimatedDuration(assignment) {
  * Gets daily agenda with optimized task scheduling
  * @returns {Promise<ScheduledTask[]>} Ordered list of scheduled tasks
  */
-async function getDailyAgenda() {
+async function getDailyAgenda(userId) {
   try {
-    const response = await axios.get('/api/assignments/events/today');
-    const existingEvents = response.data;
-    
+    // const response = await axios.get('/api/assignments/events/today');
+    // const existingEvents = response.data;
+    const existingEvents = await getTodayEvents(userId);
+
     const vacantBlocks = getVacantTimeBlocks(existingEvents);
-    
-    const tasks = await getTaskList();
+
+    const tasks = await getTaskList(userId);
+
+
+
     const tasksWithPriority = await Promise.all(
       tasks.map(async task => ({
         assignment: task,
@@ -167,6 +175,7 @@ async function getDailyAgenda() {
       }
     }
     
+    console.log(scheduledTasks)
     return scheduledTasks;
   } catch (error) {
     console.error('Error generating daily agenda:', error);
