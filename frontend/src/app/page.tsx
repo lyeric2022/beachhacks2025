@@ -7,8 +7,52 @@ import styles from "./Dashboard.module.css";
 
 const Dashboard = () => {
   const [weeklyStats, setWeeklyStats] = useState([]);
-  const [upcoming, setUpcoming] = useState([]);
-  const [today, setToday] = useState([]);
+  const [upcoming, setUpcoming] = useState([
+    {
+      id: 1,
+      title: "Physics Homework",
+      due_date: "2024-03-25T23:59:00",
+      course: "PHYS 151"
+    },
+    {
+      id: 2,
+      title: "Database Project",
+      due_date: "2024-03-26T15:00:00",
+      course: "CECS 323"
+    },
+    {
+      id: 3,
+      title: "Final Essay",
+      due_date: "2024-03-27T12:00:00",
+      course: "ENGL 100"
+    }
+  ]);
+  const [today, setToday] = useState([
+    {
+      id: 1,
+      title: "Study Session - Physics",
+      course: "PHYS 151",
+      start_time: "2024-03-23T09:00:00",
+      end_time: "2024-03-23T10:30:00",
+      status: "active"
+    },
+    {
+      id: 2,
+      title: "Group Project Meeting",
+      course: "CECS 323",
+      start_time: "2024-03-23T13:00:00",
+      end_time: "2024-03-23T14:30:00",
+      status: "upcoming"
+    },
+    {
+      id: 3,
+      title: "Essay Writing",
+      course: "ENGL 100",
+      start_time: "2024-03-23T15:00:00",
+      end_time: "2024-03-23T16:30:00",
+      status: "upcoming"
+    }
+  ]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -38,6 +82,18 @@ const Dashboard = () => {
   const formatTime = (dateString) => {
     const options = { hour: 'numeric', minute: 'numeric', hour12: true };
     return new Date(dateString).toLocaleTimeString(undefined, options);
+  };
+
+  // Update the status badge in the agenda items
+  const getStatusBadge = (status) => {
+    switch (status) {
+      case 'active':
+        return 'bg-green-100 text-green-800';
+      case 'upcoming':
+        return 'bg-blue-100 text-blue-800';
+      default:
+        return 'bg-gray-100 text-gray-800';
+    }
   };
 
   return (
@@ -137,8 +193,8 @@ const Dashboard = () => {
                 <li key={task.id} className="border rounded-lg p-4 hover:border-green-300 hover:bg-green-50 transition-all hover:-translate-y-1 duration-300">
                   <div className="flex justify-between items-start mb-2">
                     <h3 className="font-medium text-zinc-800">{task.title}</h3>
-                    <span className="text-xs bg-green-100 text-green-800 px-2 py-1 rounded-full">
-                      Active
+                    <span className={`text-xs px-2 py-1 rounded-full ${getStatusBadge(task.status)}`}>
+                      {task.status.charAt(0).toUpperCase() + task.status.slice(1)}
                     </span>
                   </div>
                   <p className="text-sm text-zinc-500 flex items-center">
@@ -147,7 +203,7 @@ const Dashboard = () => {
                   </p>
                   <p className="text-sm text-zinc-500 mt-1 flex items-center">
                     <Clock className="h-3 w-3 mr-1" />
-                    Started: {formatTime(task.start_time)}
+                    {formatTime(task.start_time)} - {formatTime(task.end_time)}
                   </p>
                 </li>
               ))
