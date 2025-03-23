@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -10,6 +10,8 @@ import {
 } from "@/components/ui/dropdown-menu";
 import EditModal from "@/components/EditModal";
 import { deleteAssignment } from "@/app/api/assignmentApi";
+import { startSession } from "@/app/api/sessionApi";
+import { checkSessionExists } from "@/app/api/sessionApi";
 
 const AssignmentCheckbox = ({
   id,
@@ -25,7 +27,20 @@ const AssignmentCheckbox = ({
   const [isChecked, setIsChecked] = useState(status === "Completed");
   const [editModal, setEditModal] = useState(false);
   const [editingAssignment, setEditingAssignment] = useState(null);
+  const [sessionStarted, setSessionStarted] = useState(false);
 
+  useEffect(() => {
+    const check = async () => {
+      try {
+        const exists = await checkSessionExists(id, 55141); // replace with auth user if needed
+        setSessionStarted(exists);
+      } catch (err) {
+        console.error("Error checking session:", err);
+      }
+    };
+
+    check();
+  }, []);
   const handleCheckboxChange = () => {
     setIsChecked(!isChecked);
     toggleStatus(id);
@@ -52,6 +67,15 @@ const AssignmentCheckbox = ({
     }
   };
 
+  const handleStart = async () => {
+    try {
+      const userId = 55141; // or get from auth context
+      const session = await startSession(id, userId);
+      console.log("✅ Session started:", session);
+    } catch (err) {
+      console.error("❌ Failed to start session:", err);
+    }
+  };
   return (
     <div className="w-full flex items-center gap-4 p-6">
       <input
@@ -84,6 +108,15 @@ const AssignmentCheckbox = ({
                 {status}
               </p>
             </div>
+            {!sessionStarted && (
+              <button
+                onClick={handleStart}
+                className="bg-zinc-600 hover:bg-zinc-500 text-white ml-4 px-4 py-2 rounded-lg text-sm"
+              >
+                ▶ Start
+              </button>
+            )}
+
             <div className="px-2">
               <DropdownMenu>
                 <DropdownMenuTrigger>
