@@ -10,3 +10,6 @@ studydash-server/package-lock.json
 *.pyc
 __pycache__/
 canvas_output.json
+
+node_modules/
+.env
