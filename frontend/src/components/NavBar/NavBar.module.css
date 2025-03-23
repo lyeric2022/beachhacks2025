@@ -16,17 +16,39 @@
   display: flex;
   flex-direction: column;
   width: 100%;
-  justify-content: center;
+  justify-content: flex-start;
   margin-top: 50px;
 }
 
 .logo {
   font-size: 2rem;
   font-weight: bolder;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.logoIcon {
+  margin-right: 8px;
+}
+
+.navButton, 
+.accountButton {
+  justify-content: flex-start;
+  text-align: left;
+  width: 100%;
+  display: flex;
+  padding-left: 10px;
+}
+
+.navIcon,
+.accountIcon {
+  margin-right: 10px;
 }
 
 .bottom {
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: flex-start;
+  width: 100%;
 }
