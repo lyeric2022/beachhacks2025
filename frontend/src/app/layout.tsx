@@ -4,10 +4,10 @@ import "./globals.css";
 import NavBar from "@/components/NavBar/NavBar";
 
 const poppins = Poppins({
-  subsets: ['latin'],
-  display: 'swap',
-  variable: '--font-poppins',
-  weight: ['100', '200', '300', '400', '500', '600', '700', '800', '900']
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-poppins",
+  weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
 });
 
 const geistSans = Geist({
@@ -32,9 +32,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={`${poppins.variable} antialiased flex h-screen`}
-      >
+      <body className={`${poppins.variable} antialiased flex h-screen`}>
         <NavBar />
         {children}
       </body>

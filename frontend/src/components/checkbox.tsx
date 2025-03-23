@@ -9,14 +9,18 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import EditModal from "@/components/EditModal";
+import { deleteAssignment } from "@/app/api/assignmentApi";
 
 const AssignmentCheckbox = ({
   id,
   title,
   duedate,
+  rawdate,
   course,
+  course_id,
   status,
   toggleStatus,
+  refreshAssignments,
 }) => {
   const [isChecked, setIsChecked] = useState(status === "Completed");
   const [editModal, setEditModal] = useState(false);
@@ -28,18 +32,25 @@ const AssignmentCheckbox = ({
   };
 
   const handleEditModal = () => {
-    setEditingAssignment({ id, title, duedate, course });
+    setEditingAssignment({
+      id,
+      title,
+      course,
+      rawDueDate: rawdate,
+      course_id,
+    });
     setEditModal(true);
   };
 
-  // const handleDelete = async () => {
-  //   try {
-  //     await deleteDoc(docRef);
-  //     onClose();
-  //   } catch (error) {
-  //     console.error("Error deleting document: ", error);
-  //   }
-  // };
+  const handleDelete = async () => {
+    try {
+      await deleteAssignment(id); // or assignment.id
+      console.log("✅ Assignment deleted");
+      if (refreshAssignments) await refreshAssignments(); // optional
+    } catch (error) {
+      console.error("❌ Error deleting assignment:", error);
+    }
+  };
 
   return (
     <div className="w-full flex items-center gap-4 p-6">
@@ -83,9 +94,9 @@ const AssignmentCheckbox = ({
                     Edit
                   </DropdownMenuItem>
 
-                  {/* <DropdownMenuItem onClick={() => handleDelete}> */}
-                  {/* Delete */}
-                  {/* </DropdownMenuItem> */}
+                  <DropdownMenuItem onClick={handleDelete}>
+                    Delete
+                  </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
             </div>
@@ -96,6 +107,7 @@ const AssignmentCheckbox = ({
         open={editModal}
         onClose={() => setEditModal(false)}
         assignment={editingAssignment}
+        refreshAssignments={refreshAssignments}
       />
     </div>
   );

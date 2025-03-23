@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Table,
   TableBody,
@@ -12,53 +12,86 @@ import {
 } from "@/components/ui/table";
 import AssignmentCheckbox from "@/components/checkbox";
 import AddModal from "@/components/AddModal";
+import { fetchAssignmentsByUser } from "../api/assignmentApi";
+import { updateAssignmentStatus } from "../api/assignmentApi";
 
 const Assignment = () => {
   const [tab, setTab] = useState("All");
   const [addModal, setAddModal] = useState(false);
-  const [assignments, setAssignments] = useState([
-    {
-      id: 1,
-      title: "Math Homework 1",
-      duedate: "Nov. 15 at 11:59",
-      course: "Calculus II",
-      status: "In Progress",
-    },
-    {
-      id: 2,
-      title: "History Essay",
-      duedate: "2025-03-28",
-      course: "World History",
-      status: "Completed",
-    },
-    {
-      id: 3,
-      title: "Physics Lab Report",
-      duedate: "2025-03-27",
-      course: "Physics 101",
-      status: "In Progress",
-    },
-    {
-      id: 4,
-      title: "Computer Science Project",
-      duedate: "2025-04-02",
-      course: "Intro to Programming",
-      status: "In Progress",
-    },
-  ]);
+  const [assignments, setAssignments] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const userId = 55141;
 
-  const toggleStatus = (id) => {
-    setAssignments((prevAssignments) =>
-      prevAssignments.map((assignment) =>
-        assignment.id === id
-          ? {
-              ...assignment,
-              status:
-                assignment.status === "Completed" ? "In Progress" : "Completed",
-            }
-          : assignment
-      )
-    );
+  const getData = async () => {
+    try {
+      const data = await fetchAssignmentsByUser(userId);
+
+      const formatDate = (iso) => {
+        if (!iso) return "No due date";
+        return new Date(iso).toLocaleString("en-US", {
+          month: "short",
+          day: "numeric",
+          hour: "2-digit",
+          minute: "2-digit",
+          hour12: true,
+          timeZone: "UTC",
+        });
+      };
+
+      const formatted = data.map((a) => ({
+        id: a.id,
+        title: a.title,
+        duedate: formatDate(a.due_date),
+        rawDueDate: a.due_date,
+        course_id: a.courses.id,
+        course: a.courses.title,
+        status: a.status ?? "In Progress",
+      }));
+
+      formatted.sort((a, b) => {
+        if (a.status === "Completed" && b.status !== "Completed") return 1;
+        if (b.status === "Completed" && a.status !== "Completed") return -1;
+
+        const dateA = a.rawDueDate ? new Date(a.rawDueDate) : null;
+        const dateB = b.rawDueDate ? new Date(b.rawDueDate) : null;
+
+        if (dateA && dateB) return dateA - dateB;
+        if (!dateA && dateB) return 1;
+        if (dateA && !dateB) return -1;
+        return 0;
+      });
+
+      setAssignments(formatted);
+    } catch (err) {
+      console.error("Error fetching assignments", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    getData();
+  }, []);
+
+  const toggleStatus = async (id) => {
+    const updated = assignments.map((assignment) => {
+      if (assignment.id === id) {
+        const newStatus =
+          assignment.status === "Completed" ? "In Progress" : "Completed";
+        return { ...assignment, status: newStatus };
+      }
+      return assignment;
+    });
+
+    setAssignments(updated);
+
+    // Find the updated status
+    const changed = updated.find((a) => a.id === id);
+    try {
+      await updateAssignmentStatus(id, changed.status);
+    } catch (error) {
+      console.error("Failed to update status:", error);
+    }
   };
 
   const handleAddModal = () => {
@@ -69,7 +102,7 @@ const Assignment = () => {
     tab === "All" ? assignments : assignments.filter((a) => a.status === tab);
 
   return (
-    <div className="container mx-auto my-20">
+    <div className="container mx-10 my-10 overflow-scroll">
       <div className="flex justify-between my-8">
         <h1 className="font-bold text-2xl ">Assignments</h1>
         <button
@@ -79,7 +112,11 @@ const Assignment = () => {
           Add Assignment
         </button>
       </div>
-      <AddModal open={addModal} onClose={handleAddModal} />
+      <AddModal
+        open={addModal}
+        onClose={handleAddModal}
+        refreshAssignments={getData}
+      />
       <div className="border rounded-2xl my-4 ">
         <div className="flex space-x-4 px-2 py-4 bg-zinc-50 rounded-t-2xl">
           {["All", "In Progress", "Completed"].map((status) => (
@@ -105,18 +142,19 @@ const Assignment = () => {
                   <TableCell>
                     <div
                       className={`${
-                        assignment.status === "Completed"
-                          ? "bg-zinc-100"
-                          : "none"
+                        assignment.status === "Completed" ? "bg-zinc-100" : ""
                       }`}
                     >
                       <AssignmentCheckbox
                         id={assignment.id}
                         title={assignment.title}
                         duedate={assignment.duedate}
+                        rawdate={assignment.rawDueDate}
                         course={assignment.course}
+                        course_id={assignment.course_id}
                         status={assignment.status}
                         toggleStatus={toggleStatus}
+                        refreshAssignments={getData}
                       />
                     </div>
                   </TableCell>
