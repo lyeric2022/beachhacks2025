@@ -11,9 +11,3 @@ studydash-server/.env
 *.pyc
 __pycache__/
 canvas_output.json
-
-node_modules/
-.env
-
-/*.html
-/*.png

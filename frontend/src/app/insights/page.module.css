@@ -5,7 +5,11 @@
   padding: 1.5rem;
   min-height: 100vh;
   background-color: #f9fafb;
-  background-image: linear-gradient(to bottom right, rgba(59, 130, 246, 0.05) 0%, rgba(139, 92, 246, 0.05) 100%);
+  background-image: linear-gradient(
+    to bottom right,
+    rgba(59, 130, 246, 0.05) 0%,
+    rgba(139, 92, 246, 0.05) 100%
+  );
 }
 
 .container::before {
@@ -15,9 +19,16 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background-image: 
-    radial-gradient(circle at 25px 25px, rgba(59, 130, 246, 0.1) 2px, transparent 0),
-    radial-gradient(circle at 75px 75px, rgba(139, 92, 246, 0.1) 2px, transparent 0);
+  background-image: radial-gradient(
+      circle at 25px 25px,
+      rgba(59, 130, 246, 0.1) 2px,
+      transparent 0
+    ),
+    radial-gradient(
+      circle at 75px 75px,
+      rgba(139, 92, 246, 0.1) 2px,
+      transparent 0
+    );
   background-size: 100px 100px;
   pointer-events: none;
   opacity: 0.4;
@@ -91,7 +102,13 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: linear-gradient(120deg, transparent 0%, transparent 50%, rgba(139, 92, 246, 0.1) 50%, rgba(59, 130, 246, 0.1) 100%);
+  background: linear-gradient(
+    120deg,
+    transparent 0%,
+    transparent 50%,
+    rgba(139, 92, 246, 0.1) 50%,
+    rgba(59, 130, 246, 0.1) 100%
+  );
   transform: translateX(-100%);
   transition: transform 0.3s ease;
 }
@@ -175,7 +192,11 @@
   right: 0;
   width: 150px;
   height: 150px;
-  background: radial-gradient(circle at top right, rgba(59, 130, 246, 0.08), transparent 70%);
+  background: radial-gradient(
+    circle at top right,
+    rgba(59, 130, 246, 0.08),
+    transparent 70%
+  );
   border-radius: 0 0 0 100%;
   z-index: -1;
   transition: all 0.3s ease;
@@ -184,10 +205,15 @@
 .card:hover::after {
   width: 180px;
   height: 180px;
-  background: radial-gradient(circle at top right, rgba(59, 130, 246, 0.12), transparent 70%);
+  background: radial-gradient(
+    circle at top right,
+    rgba(59, 130, 246, 0.12),
+    transparent 70%
+  );
 }
 
-.icon, .subIcon {
+.icon,
+.subIcon {
   margin-right: 10px;
   display: inline-block;
   vertical-align: text-bottom;
@@ -288,23 +314,23 @@
   .content {
     grid-template-columns: repeat(2, 1fr); /* 2 columns on medium screens */
   }
-  
+
   /* First 2 cards each take 1 column */
   .card:nth-child(1),
   .card:nth-child(2) {
     grid-column: span 1;
   }
-  
+
   /* Third card takes full width */
   .card:nth-child(3) {
     grid-column: span 2;
   }
-  
+
   /* Learning Patterns takes 1 column */
   .card:nth-child(4) {
     grid-column: span 1;
   }
-  
+
   /* Recommendations still takes 2 columns (full width) */
   .card:nth-child(5) {
     grid-column: span 2;
@@ -315,7 +341,7 @@
   .content {
     grid-template-columns: 1fr; /* Single column on mobile */
   }
-  
+
   /* All cards take full width on mobile */
   .card:nth-child(n) {
     grid-column: span 1;
@@ -326,15 +352,15 @@
   .content {
     grid-template-columns: 1fr;
   }
-  
+
   .card {
     padding: 1.25rem;
   }
-  
+
   .headerTitle {
     font-size: 1.625rem;
   }
-  
+
   /* Even in mobile view, keep the recommendation card the same */
   .card:nth-child(5) {
     grid-column: span 1;
@@ -346,7 +372,7 @@
   .content {
     grid-template-columns: repeat(3, 1fr);
   }
-  
+
   /* Make the Recommendations card span 2 columns x 2 rows on large screens */
   .card:nth-child(5) {
     grid-column: span 2;
@@ -362,9 +388,16 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background-image: 
-    radial-gradient(circle at 25px 25px, rgba(59, 130, 246, 0.1) 2px, transparent 0),
-    radial-gradient(circle at 75px 75px, rgba(139, 92, 246, 0.1) 2px, transparent 0);
+  background-image: radial-gradient(
+      circle at 25px 25px,
+      rgba(59, 130, 246, 0.1) 2px,
+      transparent 0
+    ),
+    radial-gradient(
+      circle at 75px 75px,
+      rgba(139, 92, 246, 0.1) 2px,
+      transparent 0
+    );
   background-size: 100px 100px;
   pointer-events: none;
   opacity: 0.4;

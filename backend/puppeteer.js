@@ -11,20 +11,25 @@ const fs = require("fs");
  * @param {number} pollInterval - How often to check (in ms).
  * @returns {Promise<string>} - The stable text content.
  */
-async function waitForStableResponse(page, selector, stableTime = 3000, pollInterval = 500) {
+async function waitForStableResponse(
+  page,
+  selector,
+  stableTime = 3000,
+  pollInterval = 500
+) {
   let lastText = "";
   let unchangedTime = 0;
-  
+
   while (true) {
     try {
-      const newText = await page.$eval(selector, el => el.innerText);
+      const newText = await page.$eval(selector, (el) => el.innerText);
       if (newText === lastText) {
         unchangedTime += pollInterval;
       } else {
         lastText = newText;
         unchangedTime = 0;
       }
-      
+
       if (unchangedTime >= stableTime) {
         return lastText;
       }
@@ -32,7 +37,7 @@ async function waitForStableResponse(page, selector, stableTime = 3000, pollInte
       // The element might not be present yet.
       unchangedTime = 0;
     }
-    await new Promise(resolve => setTimeout(resolve, pollInterval));
+    await new Promise((resolve) => setTimeout(resolve, pollInterval));
   }
 }
 
@@ -50,21 +55,31 @@ async function waitForStableResponse(page, selector, stableTime = 3000, pollInte
     });
 
     console.log("Navigating to Butterfly homepage...");
-    await page.goto("https://beachhacks-assistant.dain.org/", { waitUntil: "networkidle2" });
+    await page.goto("https://beachhacks-assistant.dain.org/", {
+      waitUntil: "networkidle2",
+    });
     console.log("Page loaded.");
 
     // (Optional) Take an initial screenshot.
     await page.screenshot({ path: "initial_debug.png", fullPage: true });
 
     // Check if logged in.
-    const loggedIn = await page.evaluate(() => Boolean(document.querySelector("button.logout")));
+    const loggedIn = await page.evaluate(() =>
+      Boolean(document.querySelector("button.logout"))
+    );
     if (!loggedIn) {
-      console.log("User is NOT logged in. Please log in manually in the connected browser.");
+      console.log(
+        "User is NOT logged in. Please log in manually in the connected browser."
+      );
     }
 
     // Wait for the textarea.
-    const textAreaSelector = 'textarea[placeholder="Analyze and summarize this research paper..."]';
-    console.log("Waiting for the target textarea using selector:", textAreaSelector);
+    const textAreaSelector =
+      'textarea[placeholder="Analyze and summarize this research paper..."]';
+    console.log(
+      "Waiting for the target textarea using selector:",
+      textAreaSelector
+    );
     await page.waitForSelector(textAreaSelector, { timeout: 30000 });
     console.log("Textarea found.");
 
@@ -85,7 +100,10 @@ async function waitForStableResponse(page, selector, stableTime = 3000, pollInte
 
     // Wait for the submit button and click it.
     const sendButtonSelector = 'button[type="submit"]';
-    console.log("Waiting for the submit button using selector:", sendButtonSelector);
+    console.log(
+      "Waiting for the submit button using selector:",
+      sendButtonSelector
+    );
     await page.waitForSelector(sendButtonSelector, { timeout: 10000 });
     console.log("Submit button found, clicking it...");
     await page.click(sendButtonSelector);
@@ -97,11 +115,19 @@ async function waitForStableResponse(page, selector, stableTime = 3000, pollInte
     console.log("Response container found. Waiting for stable response...");
 
     // Poll for a stable response.
-    const finalResponse = await waitForStableResponse(page, responseSelector, 3000, 500);
+    const finalResponse = await waitForStableResponse(
+      page,
+      responseSelector,
+      3000,
+      500
+    );
     console.log("Stable final response:", finalResponse);
 
     // Store the full HTML of the response container.
-    const fullResponseHTML = await page.$eval(responseSelector, el => el.outerHTML);
+    const fullResponseHTML = await page.$eval(
+      responseSelector,
+      (el) => el.outerHTML
+    );
     fs.writeFileSync("full_response.html", fullResponseHTML, "utf8");
     console.log("Full response HTML saved as full_response.html");
 
@@ -110,7 +136,7 @@ async function waitForStableResponse(page, selector, stableTime = 3000, pollInte
     console.log("Screenshot of response saved as response.png");
 
     // Wait for a few seconds for manual inspection.
-    await new Promise(resolve => setTimeout(resolve, 10000));
+    await new Promise((resolve) => setTimeout(resolve, 10000));
     console.log("Automation script finished.");
   } catch (error) {
     console.error("Error during automation:", error);
