@@ -63,10 +63,111 @@ const updateAssignment = async (id, updatedData) => {};
 
 const deleteAssignment = async (id) => {};
 
+const getUpcomingAssignments = async (userId) => {
+  const supabase = await getDbInstance();
+  const now = new Date().toISOString();
+  console.log("upcoming assignments");
+  console.log(now);
+  console.log(userId);
+  const { data, error } = await supabase
+    .from("assignments")
+    .select("*")
+    .eq("user_id", userId)
+    .gte("due_date", now)
+    .order("due_date", { ascending: true });
+
+  //
+  // console.log(data)
+
+  if (error) {
+    console.error("Error fetching upcoming assignments:", error);
+    return [];
+  }
+
+  console.log(
+    data.map((assignment) => ({
+      ...assignment,
+      assignment_type: [assignment.assignment_type || "homework"],
+    }))
+  );
+
+  return data.map((assignment) => ({
+    ...assignment,
+    assignment_type: [assignment.assignment_type || "homework"],
+  }));
+};
+
+const getCourseGrade = async (courseId, userId) => {
+  const supabase = await getDbInstance();
+  const { data, error } = await supabase
+    .from("courses")
+    .select("current_grade")
+    .eq("id", courseId)
+    .eq("user_id", userId)
+    .single();
+
+  if (error) {
+    console.error("Error fetching course grade:", error);
+    return { grade: 85 }; // Default grade if not found
+  }
+
+  return { grade: data.current_grade };
+};
+
+const getTodayEvents = async (userId) => {
+  const supabase = await getDbInstance();
+  const today = new Date();
+  const tomorrow = new Date(today);
+  tomorrow.setDate(tomorrow.getDate() + 1);
+
+  const { data, error } = await supabase
+    .from("events")
+    .select("*")
+    .eq("user_id", userId)
+    .gte("start", today.toISOString())
+    .lt("start", tomorrow.toISOString())
+    .order("start", { ascending: true });
+
+  if (error) {
+    console.error("Error fetching today's events:", error);
+    return [];
+  }
+
+  return data;
+};
+
+const getEventsByDate = async (userId, date) => {
+  const supabase = await getDbInstance();
+  const startOfDay = new Date(date);
+  startOfDay.setHours(0, 0, 0, 0);
+
+  const endOfDay = new Date(date);
+  endOfDay.setHours(23, 59, 59, 999);
+
+  const { data, error } = await supabase
+    .from("events")
+    .select("*")
+    .eq("user_id", userId)
+    .gte("start", startOfDay.toISOString())
+    .lt("start", endOfDay.toISOString())
+    .order("start", { ascending: true });
+
+  if (error) {
+    console.error("Error fetching events by date:", error);
+    return [];
+  }
+
+  return data;
+};
+
 module.exports = {
   getAllAssignmentsByUser,
   getAssignmentById,
   addAssignment,
   updateAssignment,
   deleteAssignment,
+  getUpcomingAssignments,
+  getCourseGrade,
+  getTodayEvents,
+  getEventsByDate,
 };

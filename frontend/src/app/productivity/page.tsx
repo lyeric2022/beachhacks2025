@@ -122,9 +122,9 @@ const page = () => {
   };
 
   return (
-    <div className={`${styles.container}`}>
+    <div className="container mx-10 my-10 overflow-scroll">
       <div>
-        <div className={styles.header}>Header</div>
+        <div className="font-bold text-2xl my-8">Header</div>
         <div className={styles.content}>
           <div>
             <div className={styles.left}>
