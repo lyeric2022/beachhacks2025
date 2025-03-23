@@ -1,0 +1,13 @@
+node_modules/
+.env
+.env.*
+dist/
+build/
+*.log
+.DS_Store
+studydash-server/package-lock.json
+studydash-server/.env
+
+*.pyc
+__pycache__/
+canvas_output.json
