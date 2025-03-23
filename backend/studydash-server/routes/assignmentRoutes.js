@@ -1,10 +1,21 @@
-const express = require("express");
-const UserController = require("../controllers/assignmentsController");
+
+const express = require('express');
+const AssignmentsController = require('../controllers/assignmentsController');
+const taskUtils = require('./taskUtils');
+
 const router = express.Router();
 const getDbInstance = require("../config/supabaseConfig");
 
-router.get("/", UserController.getAssignmentByUser);
-router.post("/", UserController.createAssignment);
+
+// router.get('/', UserController.getAssignmentByUser);
+// router.post('/', UserController.createAssignment);
+router.get('/upcoming', AssignmentsController.getUpcomingAssignments);
+router.get('/courses/:id/grade', AssignmentsController.getCourseGrade);
+router.get('/events/today', AssignmentsController.getTodayEvents);
+router.get('/agenda', AssignmentsController.getDailyAgenda);
+router.get('/events/by-date', AssignmentsController.getEventsByDate);
+router.get('/daily-agenda', AssignmentsController.getDailyAgenda);
+
 
 router.put("/:id", async (req, res) => {
   const { id } = req.params;
