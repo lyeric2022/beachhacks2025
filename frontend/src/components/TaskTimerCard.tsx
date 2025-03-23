@@ -195,8 +195,8 @@ const TimerTaskCard = ({ task, onUpdate }) => {
   };
 
   return (
-    <div className="bg-white rounded-xl shadow p-6 flex justify-between items-center">
-      <div>
+    <div className="bg-[#FBFBFB] border-b p-6 mr-2 flex justify-between items-center">
+      <div className="w-3/4">
         <h2 className="text-lg font-semibold">{task.assignments.title}</h2>
         <p className="text-sm text-gray-500">
           {task.assignments.courses.title}
@@ -209,24 +209,24 @@ const TimerTaskCard = ({ task, onUpdate }) => {
           <span className="font-medium">Status:</span> {status}
         </p>
       </div>
-      <div className="flex space-x-2">
+      <div className="flex space-x-2 w-1/4">
         {status !== "In Progress" ? (
           <button
-            className="bg-indigo-600 hover:bg-indigo-500 text-white px-4 py-2 rounded-lg"
+            className="bg-green-700 hover:bg-green-600 text-white px-4 py-2 rounded-lg cursor-pointer"
             onClick={startTimer}
           >
             Resume
           </button>
         ) : (
           <button
-            className="bg-gray-500 hover:bg-gray-400 text-white px-4 py-2 rounded-lg"
+            className="bg-zinc-400 hover:bg-gray-500 text-white px-4 py-2 rounded-lg cursor-pointer"
             onClick={pauseTimer}
           >
             Pause
           </button>
         )}
         <button
-          className="bg-red-600 hover:bg-red-500 text-white px-4 py-2 rounded-lg"
+          className="bg-red-700 hover:bg-red-600 text-white px-4 py-2 rounded-lg cursor-pointer"
           onClick={stopTimer}
         >
           Stop

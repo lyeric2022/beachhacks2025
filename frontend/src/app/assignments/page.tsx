@@ -102,7 +102,7 @@ const Assignment = () => {
     tab === "All" ? assignments : assignments.filter((a) => a.status === tab);
 
   return (
-    <div className="container mx-10 my-10 overflow-scroll">
+    <div className="container mx-10 my-10 ">
       <div className="flex justify-between my-8">
         <h1 className="font-bold text-2xl ">Assignments</h1>
         <button
@@ -117,8 +117,8 @@ const Assignment = () => {
         onClose={handleAddModal}
         refreshAssignments={getData}
       />
-      <div className="border rounded-2xl my-4 ">
-        <div className="flex space-x-4 px-2 py-4 bg-zinc-50 rounded-t-2xl">
+      <div className="border rounded-2xl my-4 h-5/6 overflow-scroll">
+        <div className="flex space-x-4 px-2 py-4 bg-zinc-50 rounded-t-2xl sticky top-0 z-10">
           {["All", "In Progress", "Completed"].map((status) => (
             <button
               key={status}
@@ -134,37 +134,39 @@ const Assignment = () => {
           ))}
         </div>
         <hr />
-        {filteredAssignments.length > 0 ? (
-          <Table>
-            <TableBody>
-              {filteredAssignments.map((assignment) => (
-                <TableRow key={assignment.id}>
-                  <TableCell>
-                    <div
-                      className={`${
-                        assignment.status === "Completed" ? "bg-zinc-100" : ""
-                      }`}
-                    >
-                      <AssignmentCheckbox
-                        id={assignment.id}
-                        title={assignment.title}
-                        duedate={assignment.duedate}
-                        rawdate={assignment.rawDueDate}
-                        course={assignment.course}
-                        course_id={assignment.course_id}
-                        status={assignment.status}
-                        toggleStatus={toggleStatus}
-                        refreshAssignments={getData}
-                      />
-                    </div>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        ) : (
-          <h2 className="text-center text-gray-500">No assignments found</h2>
-        )}
+        <div className="">
+          {filteredAssignments.length > 0 ? (
+            <Table>
+              <TableBody>
+                {filteredAssignments.map((assignment) => (
+                  <TableRow key={assignment.id}>
+                    <TableCell>
+                      <div
+                        className={`${
+                          assignment.status === "Completed" ? "bg-zinc-100" : ""
+                        }`}
+                      >
+                        <AssignmentCheckbox
+                          id={assignment.id}
+                          title={assignment.title}
+                          duedate={assignment.duedate}
+                          rawdate={assignment.rawDueDate}
+                          course={assignment.course}
+                          course_id={assignment.course_id}
+                          status={assignment.status}
+                          toggleStatus={toggleStatus}
+                          refreshAssignments={getData}
+                        />
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          ) : (
+            <h2 className="text-center text-gray-500">No assignments found</h2>
+          )}
+        </div>
       </div>
     </div>
   );

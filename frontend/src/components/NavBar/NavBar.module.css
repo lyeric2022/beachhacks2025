@@ -18,27 +18,30 @@
   width: 100%;
   justify-content: flex-start;
   margin-top: 50px;
+  cursor: pointer;
 }
 
 .logo {
-  font-size: 2rem;
+  margin-top: 2rem;
+  font-size: 1.5rem;
   font-weight: bolder;
   display: flex;
   align-items: center;
-  justify-content: flex-start;
+  justify-content: center;
 }
 
 .logoIcon {
   margin-right: 8px;
 }
 
-.navButton, 
+.navButton,
 .accountButton {
   justify-content: flex-start;
   text-align: left;
   width: 100%;
   display: flex;
   padding-left: 10px;
+  cursor: pointer;
 }
 
 .navIcon,

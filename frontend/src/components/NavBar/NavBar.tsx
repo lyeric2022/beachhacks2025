@@ -55,8 +55,8 @@ export default function NavBar() {
   };
 
   return (
-    <div className={styles.container}>
-      <div className={styles.top}>
+    <div className={`${styles.container} `}>
+      <div className={`${styles.top} border-r border-zinc-200 pr-4`}>
         <div className={styles.logo}>
           <div className={styles.logoIcon}>🎓</div>
           <span className={styles.logoText}>StudyDash</span>
@@ -77,7 +77,7 @@ export default function NavBar() {
         </div>
       </div>
 
-      <div className={styles.bottom}>
+      <div className={`${styles.bottom} border-r border-zinc-200 mr-2`}>
         <Button
           variant="ghost"
           className={styles.accountButton}
