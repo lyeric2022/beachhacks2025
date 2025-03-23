@@ -10,5 +10,6 @@ router.get('/courses/:id/grade', AssignmentsController.getCourseGrade);
 router.get('/events/today', AssignmentsController.getTodayEvents);
 router.get('/agenda', AssignmentsController.getDailyAgenda);
 router.get('/events/by-date', AssignmentsController.getEventsByDate);
+router.get('/daily-agenda', AssignmentsController.getDailyAgenda);
 
 module.exports = router;

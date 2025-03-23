@@ -1,5 +1,5 @@
 const axios = require('axios');
-const { getTodayEvents, getUpcomingAssignments } = require('../services/assignmentsService');
+const { getTodayEvents, getUpcomingAssignments, getEventsByDate } = require('../services/assignmentsService');
 
 
 /**
@@ -135,52 +135,62 @@ function getEstimatedDuration(assignment) {
 
 /**
  * Gets daily agenda with optimized task scheduling
+ * @param {string} userId - The user ID
+ * @param {Date} targetDate - The date to generate agenda for
  * @returns {Promise<ScheduledTask[]>} Ordered list of scheduled tasks
  */
-async function getDailyAgenda(userId) {
-  try {
-    // const response = await axios.get('/api/assignments/events/today');
-    // const existingEvents = response.data;
-    const existingEvents = await getTodayEvents(userId);
+async function getDailyAgenda(userId, targetDate) {
+    try {
+        // Get events for the specific date
+        const startOfDay = new Date(targetDate);
+        startOfDay.setHours(0, 0, 0, 0);
+        
+        const endOfDay = new Date(targetDate);
+        endOfDay.setHours(23, 59, 59, 999);
 
-    const vacantBlocks = getVacantTimeBlocks(existingEvents);
+        // Get existing events for that day
+        const existingEvents = await getEventsByDate(userId, startOfDay);
+        
+        // Get vacant time blocks
+        const vacantBlocks = getVacantTimeBlocks(existingEvents);
 
-    const tasks = await getTaskList(userId);
+        // Get and prioritize tasks
+        const tasks = await getTaskList(userId);
+        const tasksWithPriority = await Promise.all(
+            tasks.map(async task => ({
+                assignment: task,
+                priority: await getPriorityScoreFromTask(task)
+            }))
+        );
 
+        // Sort by priority
+        tasksWithPriority.sort((a, b) => b.priority - a.priority);
 
+        const scheduledTasks = [];
 
-    const tasksWithPriority = await Promise.all(
-      tasks.map(async task => ({
-        assignment: task,
-        priority: await getPriorityScoreFromTask(task)
-      }))
-    );
-    
-    tasksWithPriority.sort((a, b) => b.priority - a.priority);
-    
-    const scheduledTasks = [];
-    
-    for (const block of vacantBlocks) {
-      const taskIndex = tasksWithPriority.findIndex(task => 
-        getEstimatedDuration(task.assignment) <= block.duration
-      );
-      
-      if (taskIndex !== -1) {
-        const task = tasksWithPriority.splice(taskIndex, 1)[0];
-        scheduledTasks.push({
-          assignment: task.assignment,
-          timeBlock: block,
-          priority: task.priority
-        });
-      }
+        // Schedule tasks in vacant blocks
+        for (const block of vacantBlocks) {
+            const taskIndex = tasksWithPriority.findIndex(task => 
+                getEstimatedDuration(task.assignment) <= 
+                (new Date(block.end).getTime() - new Date(block.start).getTime()) / (1000 * 60)
+            );
+
+            if (taskIndex !== -1) {
+                const task = tasksWithPriority.splice(taskIndex, 1)[0];
+                scheduledTasks.push({
+                    assignment: task.assignment,
+                    timeBlock: block,
+                    priority: task.priority
+                });
+            }
+        }
+
+        console.log("Generated schedule:", scheduledTasks);
+        return scheduledTasks;
+    } catch (error) {
+        console.error('Error generating daily agenda:', error);
+        return [];
     }
-    
-    console.log(scheduledTasks)
-    return scheduledTasks;
-  } catch (error) {
-    console.error('Error generating daily agenda:', error);
-    return [];
-  }
 }
 
 module.exports = {

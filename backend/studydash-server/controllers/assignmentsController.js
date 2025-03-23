@@ -69,12 +69,22 @@ exports.getTodayEvents = async (req, res) => {
 exports.getDailyAgenda = async (req, res) => {
     try {
         const userId = req.query.user_id;
-        console.log("getting dailty agenda")
-        const events = await taskUtils.getDailyAgenda(userId);
-        res.json(events);
+        const date = req.query.date;
+
+        if (!userId || !date) {
+            return res.status(400).json({ 
+                error: 'User ID and date are required' 
+            });
+        }
+
+        console.log("Generating daily agenda for:", { userId, date });
+        const agenda = await taskUtils.getDailyAgenda(userId, new Date(date));
+        res.json(agenda);
     } catch (error) {
         console.error('Error in getDailyAgenda:', error);
-        res.status(500).json({ error: 'Failed to fetch today\'s events' });
+        res.status(500).json({ 
+            error: 'Failed to generate daily agenda' 
+        });
     }
 };
 

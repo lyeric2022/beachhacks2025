@@ -41,17 +41,20 @@ export function PlanDayModal({ open, onOpenChange }: PlanDayModalProps) {
     
     setIsLoading(true);
     try {
-      const response = await fetch('/api/assignments/daily-agenda', {
+      const response = await fetch(`http://localhost:7777/api/assignments/daily-agenda?user_id=55141&date=${selectedDate.toISOString()}`, {
         method: 'GET',
         headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          user_id: "55141",
-          date: selectedDate.toISOString()
-        })
+          'Accept': 'application/json',
+        }
       });
+
+      console.log("generate plan")
+      console.log(`/api/assignments/daily-agenda?user_id=55141&date=${selectedDate.toISOString()}`)
       
+      if (!response.ok) {
+        throw new Error('Failed to generate plan');
+      }
+
       const data = await response.json();
       setPlan(data);
     } catch (error) {
@@ -77,9 +80,8 @@ export function PlanDayModal({ open, onOpenChange }: PlanDayModalProps) {
 
           <div className="space-y-4">
             <Calendar
-              mode="single"
-              selected={selectedDate}
-              onSelect={setSelectedDate}
+              onChange={setSelectedDate}
+              value={selectedDate}
               className="rounded-md border w-full"
             />
             <Button 
@@ -100,8 +102,14 @@ export function PlanDayModal({ open, onOpenChange }: PlanDayModalProps) {
                   >
                     <div className="font-medium">{task.assignment.title}</div>
                     <div className="text-sm text-muted-foreground">
-                      {new Date(task.timeBlock.start).toLocaleTimeString()} - 
-                      {new Date(task.timeBlock.end).toLocaleTimeString()}
+                      {new Date(task.timeBlock.start).toLocaleTimeString([], {
+                        hour: '2-digit',
+                        minute: '2-digit'
+                      })} - 
+                      {new Date(task.timeBlock.end).toLocaleTimeString([], {
+                        hour: '2-digit',
+                        minute: '2-digit'
+                      })}
                     </div>
                     <div className="text-sm">Priority: {task.priority}</div>
                   </div>
