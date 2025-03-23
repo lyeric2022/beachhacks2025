@@ -1,3 +1,5 @@
+const assignmentService = require('../services/assignmentsService');
+
 exports.getAssignment = async (req, res) => {
     try {
         const users = "Hello"
@@ -9,7 +11,8 @@ exports.getAssignment = async (req, res) => {
 
 exports.createAssignment = async (req, res) => {
     try {
-        const user = "hello"
+        console.log(req.body)
+        const user = await assignmentService.addAssignment(req.body)
         res.status(201).json(user);
     } catch (error) {
         res.status(500).json({ error: error.message });
