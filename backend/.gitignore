@@ -5,6 +5,7 @@ dist/
 build/
 *.log
 .DS_Store
+studydash-server/package-lock.json
 
 *.pyc
 __pycache__/
