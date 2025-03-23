@@ -7,6 +7,7 @@ import { CircularProgressbar } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
 import TimerTaskCard from "@/components/TaskTimerCard";
 import { fetchSessionsByUser } from "../api/sessionApi";
+import { updateSession } from "../api/sessionApi";
 
 const TIMER_PRESETS = {
   pomodoro: 25 * 60,
@@ -20,19 +21,59 @@ const page = () => {
   const [remainingTime, setRemainingTime] = useState(initialTime);
   const [progress, setProgress] = useState(100);
   const [isPaused, setIsPaused] = useState(true);
-  const [sessions, setSessions] = useState(0);
   const [tasks, setTasks] = useState([]);
 
   useEffect(() => {
     const loadSessions = async () => {
       try {
-        const userId = 55141; // Replace with actual auth user ID
-        const data = await fetchSessionsByUser(userId);
-        setTasks(data);
+        const userId = 55141;
+        const rawData = await fetchSessionsByUser(userId);
+
+        // 🔁 Group and aggregate by assignment_id
+        const taskMap = new Map();
+
+        rawData.forEach((session) => {
+          const key = session.assignment_id;
+          const duration = session.duration || 0;
+
+          if (!taskMap.has(key)) {
+            taskMap.set(key, {
+              ...session,
+              duration: duration,
+            });
+          } else {
+            const existing = taskMap.get(key);
+            taskMap.set(key, {
+              ...existing,
+              duration: existing.duration + duration,
+              start_time: existing.start_time
+                ? new Date(
+                    Math.min(
+                      new Date(existing.start_time).getTime(),
+                      new Date(session.start_time).getTime()
+                    )
+                  ).toISOString()
+                : session.start_time,
+              end_time: existing.end_time
+                ? new Date(
+                    Math.max(
+                      new Date(existing.end_time).getTime(),
+                      new Date(session.end_time).getTime()
+                    )
+                  ).toISOString()
+                : session.end_time,
+              status: session.is_active ? "In Progress" : existing.status,
+              is_active: session.is_active || existing.is_active,
+            });
+          }
+        });
+
+        setTasks(Array.from(taskMap.values()));
       } catch (error) {
         console.error("Error fetching sessions:", error);
       }
     };
+
     loadSessions();
   }, []);
 
@@ -63,7 +104,7 @@ const page = () => {
   useEffect(() => {
     const progressValue = (remainingTime / initialTime) * 100;
     setProgress(progressValue);
-  }, [remainingTime, initialTime]);
+  }, [remainingTime]);
 
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
@@ -87,7 +128,7 @@ const page = () => {
         <div className={styles.content}>
           <div>
             <div className={styles.left}>
-              <div className={styles.headerinner}>Pomodo Timer</div>
+              <div className={styles.headerinner}>Pomodoro Timer</div>
               <div className={styles.timer}>
                 <div className={styles.timerInner}>
                   <CircularProgressbar
@@ -128,23 +169,35 @@ const page = () => {
                   </Button>
                 )}
               </div>
-              {mode === "pomodoro" && (
-                <div className={styles.sessions}>
-                  Sessions Completed: <strong>{sessions}</strong>
-                </div>
-              )}
             </div>
           </div>
-          <div className="space-y-4">
-            {tasks.map((task) => (
-              <TimerTaskCard
-                key={task.id}
-                task={task}
-                onUpdate={(updatedTask) => {
-                  console.log("📝 Updated Task:", updatedTask);
-                }}
-              />
-            ))}
+          <div className="space-y-4 overflow-scroll">
+            {tasks
+              .filter((task) => task.status !== "Completed") // ✅ Filter out completed tasks
+              .map((task) => (
+                <TimerTaskCard
+                  key={task.id}
+                  task={task}
+                  onUpdate={async (updatedTask, id) => {
+                    try {
+                      await updateSession(id, {
+                        status: updatedTask.status,
+                        is_active: updatedTask.is_active,
+                        end_time: updatedTask.end_time,
+                        duration: updatedTask.duration, // ✅ add this line
+                      });
+                    } catch (err) {
+                      console.error("Failed to update session:", err);
+                    }
+
+                    setTasks((prev) =>
+                      updatedTask.status === "Completed"
+                        ? prev.filter((t) => t.id !== id)
+                        : prev.map((t) => (t.id === id ? updatedTask : t))
+                    );
+                  }}
+                />
+              ))}
           </div>
         </div>
       </div>

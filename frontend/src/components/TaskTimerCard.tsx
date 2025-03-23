@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { updateSession } from "@/app/api/sessionApi";
+import { useState, useEffect, useRef } from "react";
 
 const TimerTaskCard = ({ task, onUpdate }) => {
   const [status, setStatus] = useState(task.status);
@@ -10,105 +11,218 @@ const TimerTaskCard = ({ task, onUpdate }) => {
   const [endTime, setEndTime] = useState(
     task.end_time ? new Date(task.end_time) : null
   );
-  const [elapsedSeconds, setElapsedSeconds] = useState(0);
-  const [intervalId, setIntervalId] = useState(null);
 
-  const formatDuration = (seconds) => {
-    const mins = Math.floor(seconds / 60);
-    const secs = seconds % 60;
-    return `${mins}h ${secs}m`;
-  };
-
-  const startTimer = () => {
-    const now = new Date();
-    setStatus("Running");
-    setEndTime(null);
-
-    const interval = setInterval(() => {
-      setElapsedSeconds((prev) => prev + 1);
-    }, 1000);
-    setIntervalId(interval);
-
-    if (onUpdate) {
-      onUpdate({
-        ...task,
-        start_time: task.start_time,
-        end_time: null,
-        is_active: true,
-        status: "Running",
-      });
-    }
-  };
-
-  const pauseTimer = () => {
-    clearInterval(intervalId);
-    const now = new Date();
-    setEndTime(now);
-    setStatus("Paused");
-    setIntervalId(null);
-
-    if (onUpdate) {
-      onUpdate({
-        ...task,
-        end_time: now.toISOString(),
-        is_active: false,
-        status: "Paused",
-      });
-    }
-  };
-
-  const stopTimer = () => {
-    clearInterval(intervalId);
-    const now = new Date();
-    setEndTime(now);
-    setStatus("Completed");
-    setIntervalId(null);
-
-    if (onUpdate) {
-      onUpdate({
-        ...task,
-        end_time: now.toISOString(),
-        is_active: false,
-        status: "Completed",
-      });
-    }
-  };
+  const [baseElapsedSeconds, setBaseElapsedSeconds] = useState(
+    task.duration || 0
+  );
+  const [liveElapsed, setLiveElapsed] = useState(0); // Live ticking
+  const intervalRef = useRef(null);
 
   useEffect(() => {
-    return () => clearInterval(intervalId);
-  }, [intervalId]);
+    console.log("⏱️ Timer Debug Info:");
+    console.log("status:", status);
+    console.log("baseElapsedSeconds:", baseElapsedSeconds);
+    console.log("liveElapsed:", liveElapsed);
+    console.log("total:", baseElapsedSeconds + liveElapsed);
+    console.log("intervalRef.current:", intervalRef.current !== null);
+  }, [status, liveElapsed, baseElapsedSeconds]);
+
+  useEffect(() => {
+    // Reset interval
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+      intervalRef.current = null;
+    }
+
+    // Only start ticking if active
+    if (task.is_active && task.status === "In Progress") {
+      const start = new Date(task.start_time).getTime();
+      const now = Date.now();
+      const resumeSeconds = Math.floor((now - start) / 1000);
+
+      setLiveElapsed(resumeSeconds);
+
+      intervalRef.current = setInterval(() => {
+        setLiveElapsed((prev) => {
+          const next = prev + 1;
+          return next;
+        });
+      }, 1000);
+    }
+
+    return () => {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+        intervalRef.current = null;
+      }
+    };
+  }, [task.is_active, task.status, task.start_time]);
+
+  useEffect(() => {
+    console.log("live", liveElapsed);
+    const total = baseElapsedSeconds + liveElapsed;
+    console.log(total);
+    if (liveElapsed > 0 && liveElapsed % 30 == 0) {
+      console.log("updating");
+      updateSession(task.id, { duration: total }).catch((err) =>
+        console.error("Failed to update duration:", err)
+      );
+    }
+  }, [liveElapsed]);
+
+  // useEffect(() => {
+  //   let total = task.duration || 0;
+
+  //   if (task.start_time) {
+  //     const start = new Date(task.start_time);
+  //     setStartTime(start);
+
+  //     // 🧠 If the task is currently active, calculate how much time has passed since start_time
+  //     if (task.is_active && task.status === "In Progress") {
+  //       const now = Date.now();
+  //       const elapsedSinceStart = Math.floor((now - start.getTime()) / 1000);
+  //       setLiveElapsed(elapsedSinceStart);
+
+  //       // Start ticking
+  //       if (!intervalId) {
+  //         const interval = setInterval(() => {
+  //           setLiveElapsed((prev) => prev + 1);
+  //         }, 1000);
+  //         setIntervalId(interval);
+  //       }
+  //     }
+  //   }
+  //   if (task.end_time) {
+  //     setEndTime(new Date(task.end_time));
+  //   }
+
+  //   setBaseElapsedSeconds(total);
+  // }, [task]);
+
+  // useEffect(() => {
+  //   const hasActive = task.sessions?.some((s) => s.is_active);
+  //   if (hasActive && status === "In Progress" && !intervalId) {
+  //     const interval = setInterval(() => {
+  //       setLiveElapsed((prev) => prev + 1);
+  //     }, 1000);
+  //     setIntervalId(interval);
+  //   }
+  // }, [task.sessions, status, intervalId]);
+
+  // useEffect(() => {
+  //   return () => clearInterval(intervalRef.current);
+  // }, []);
+
+  const formatDuration = (seconds) => {
+    const hrs = Math.floor(seconds / 3600);
+    const mins = Math.floor((seconds % 3600) / 60);
+    return `${hrs}h ${mins}m`;
+  };
+
+  const startTimer = async () => {
+    const now = new Date();
+    setStatus("In Progress");
+    setEndTime(null);
+    setStartTime(now);
+    setLiveElapsed(0);
+
+    if (intervalRef.current === null) {
+      intervalRef.current = setInterval(() => {
+        setLiveElapsed((prev) => prev + 1);
+      }, 1000);
+    }
+
+    if (onUpdate) {
+      await onUpdate(
+        {
+          ...task,
+          end_time: null,
+          is_active: true,
+          status: "In Progress",
+        },
+        task.id
+      );
+    }
+  };
+
+  const pauseTimer = async () => {
+    clearInterval(intervalRef.current);
+    intervalRef.current = null;
+
+    const now = new Date();
+    const total = baseElapsedSeconds + liveElapsed;
+    setBaseElapsedSeconds(total);
+    setLiveElapsed(0);
+    setStatus("Paused");
+    setEndTime(now);
+
+    if (onUpdate) {
+      await onUpdate(
+        {
+          ...task,
+          status: "Paused",
+          end_time: now.toISOString(),
+          duration: total,
+        },
+        task.id
+      );
+    }
+  };
+
+  const stopTimer = async () => {
+    clearInterval(intervalRef.current);
+    intervalRef.current = null;
+
+    const now = new Date();
+    const total = baseElapsedSeconds + liveElapsed;
+    setBaseElapsedSeconds(total);
+    setLiveElapsed(0);
+    setStatus("Completed");
+    setEndTime(now);
+
+    if (onUpdate) {
+      await onUpdate(
+        {
+          ...task,
+          status: "Completed",
+          is_active: false,
+          end_time: now.toISOString(),
+          duration: total,
+        },
+        task.id
+      );
+    }
+  };
 
   return (
     <div className="bg-white rounded-xl shadow p-6 flex justify-between items-center">
       <div>
-        <h2 className="text-lg font-semibold">{task.title}</h2>
-        <p className="text-sm text-gray-500">{task.course}</p>
-        <p className="text-sm mt-2">
-          <span className="font-medium">Started:</span>{" "}
-          {startTime ? startTime.toLocaleTimeString() : "--"}
+        <h2 className="text-lg font-semibold">{task.assignments.title}</h2>
+        <p className="text-sm text-gray-500">
+          {task.assignments.courses.title}
         </p>
         <p className="text-sm">
           <span className="font-medium">Duration:</span>{" "}
-          {formatDuration(elapsedSeconds)}
+          {formatDuration(baseElapsedSeconds + liveElapsed)}
         </p>
         <p className="text-sm">
           <span className="font-medium">Status:</span> {status}
         </p>
       </div>
       <div className="flex space-x-2">
-        {status !== "Running" ? (
+        {status !== "In Progress" ? (
           <button
             className="bg-indigo-600 hover:bg-indigo-500 text-white px-4 py-2 rounded-lg"
             onClick={startTimer}
           >
-            ▶ Resume
+            Resume
           </button>
         ) : (
           <button
             className="bg-gray-500 hover:bg-gray-400 text-white px-4 py-2 rounded-lg"
             onClick={pauseTimer}
           >
-            ⏸ Pause
+            Pause
           </button>
         )}
         <button
