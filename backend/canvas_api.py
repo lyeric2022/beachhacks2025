@@ -2,6 +2,7 @@ import requests
 import json
 from datetime import datetime, timezone
 from dotenv import load_dotenv
+from supabase import create_client, Client
 import os
 
 # Load environment variables
@@ -9,8 +10,14 @@ load_dotenv()
 
 # === Configuration ===
 CANVAS_API_TOKEN = os.getenv('CANVAS_API_TOKEN')
+SUPABASE_URL = os.getenv("SUPABASE_URL")
+SUPABASE_KEY = os.getenv("SUPABASE_ANON_KEY")
 if not CANVAS_API_TOKEN:
     raise ValueError("CANVAS_API_TOKEN not found in environment variables")
+if not SUPABASE_URL or not SUPABASE_KEY:
+    raise ValueError("Missing Supabase credentials")
+
+supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
 
 BASE_URL = "https://csulb.instructure.com/api/v1"
 HEADERS = {"Authorization": f"Bearer {CANVAS_API_TOKEN}"}
@@ -101,6 +108,8 @@ def main():
         "sortable_name": profile.get("sortable_name")
     }
     
+    supabase.table("user").upsert(output["user_profile"]).execute()
+    
     # 2. Get all courses and filter for Spring 2025 by checking the term.
     courses = get_courses()
     spring_courses = [
@@ -121,13 +130,20 @@ def main():
         
         course_data = {
             "id": course_id,
-            "name": course.get("name"),
+            "title": course.get("name"),
             "overall_score": enrollment_map[course_id].get("current_score"),
             "assignments": {
                 "upcoming": [],
                 "past": []
             }
         }
+        
+        supabase.table("courses").upsert({
+            "id": course_id,
+            "title": course.get("name"),
+            "overall_score": course_data["overall_score"],
+            "user_id": profile.get("id")
+        }).execute()
         
         # Get assignment groups (mapping by id).
         group_mapping = get_assignment_groups(course_id)
@@ -158,15 +174,20 @@ def main():
         
         # Process upcoming assignments (include essential fields).
         for a in upcoming:
-            course_data["assignments"]["upcoming"].append({
+            assignment_data = {
                 "id": a.get("id"),
-                "name": a.get("name"),
-                "due_at": a.get("due_at"),
+                "title": a.get("name"),
+                "due_date": a.get("due_at"),
                 "points_possible": a.get("points_possible"),
-                "assignment_type": a.get("assignment_type"),
-                "assignment_group": a.get("assignment_group_info")
-            })
-        
+                "assignment_type": json.dumps(a.get("assignment_type")),
+                "group_name": a["assignment_group_info"]["group_name"],
+                "group_weight": a["assignment_group_info"]["group_weight"],
+                "course_id": course_id,
+                "user_id": profile.get("id")
+            }
+            course_data["assignments"]["upcoming"].append(assignment_data)
+            supabase.table("assignments").upsert(assignment_data).execute()
+            
         # Process past assignments: fetch submission grade info.
         for a in past:
             submission = get_submission_self(course_id, a.get("id"))
@@ -182,11 +203,11 @@ def main():
                     grade_info["percentage"] = None
             a_entry = {
                 "id": a.get("id"),
-                "name": a.get("name"),
+                "title": a.get("name"),
                 "due_at": a.get("due_at"),
                 "grade_info": grade_info,
                 "assignment_type": a.get("assignment_type"),
-                "assignment_group": a.get("assignment_group_info")
+                "assignment_group": a.get("assignment_group_info"),
             }
             course_data["assignments"]["past"].append(a_entry)
         

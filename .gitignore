@@ -1,0 +1,5 @@
+backend/dain/node_modules
+backend/studydash-server/node_modules
+backend/studydash-server/package-lock.json
+backend/studydash-server/.env
+

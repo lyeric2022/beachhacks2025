@@ -1,0 +1,94 @@
+.container {
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    padding: 20px;
+    background-color: #f4f4f5;
+}
+
+.header {
+    font-size: 2rem;
+    font-weight: bold;
+}
+
+.headerinner {
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+
+.content {
+    flex: 1;
+    display: flex;
+    column-gap: 20px;
+}
+
+.content>div {
+    padding: 10px;
+    border-radius: 15px;
+    flex: 1;
+    display: flex;
+    aspect-ratio: 1;
+    flex-direction: column;
+    box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+    background-color: #fafafa;
+}
+
+
+.left {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+    row-gap: 10px;
+}
+
+.left > div {
+    flex: 1;
+}
+
+.sessions {
+    text-align: center;
+}
+
+.timer {
+    display: flex;
+    justify-content: center;
+    padding: 20px 0;
+}
+
+.timerInner {
+    max-width: 50%;
+}
+
+.timerInner > div {
+    flex: 1 1 0
+}
+
+.timertwo {
+    flex: 1;
+    border-radius: 10px;
+    border: 1px solid black;
+    max-height: 33%;
+}
+
+.breaks {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+}
+
+.startreset {
+    display: flex;
+    justify-content: center;
+    column-gap: 20px;
+}
+
+.startresettwo {
+    display: flex;
+    justify-content: flex-end;
+    column-gap: 20px;
+}
