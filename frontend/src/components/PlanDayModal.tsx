@@ -1,11 +1,11 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { Button } from '@/components/ui/button';
-import * as Dialog from '@radix-ui/react-dialog';
-import { X } from 'lucide-react';
-import { Calendar } from 'react-calendar';
-import 'react-calendar/dist/Calendar.css';
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import * as Dialog from "@radix-ui/react-dialog";
+import { X } from "lucide-react";
+import { Calendar } from "react-calendar";
+import "react-calendar/dist/Calendar.css";
 
 // Add DialogHeader component
 const DialogHeader = ({ children }: { children: React.ReactNode }) => (
@@ -38,27 +38,32 @@ export function PlanDayModal({ open, onOpenChange }: PlanDayModalProps) {
 
   const generatePlan = async () => {
     if (!selectedDate) return;
-    
+
     setIsLoading(true);
     try {
-      const response = await fetch(`http://localhost:7777/api/assignments/daily-agenda?user_id=55141&date=${selectedDate.toISOString()}`, {
-        method: 'GET',
-        headers: {
-          'Accept': 'application/json',
+      const response = await fetch(
+        `http://localhost:7777/api/assignments/daily-agenda?user_id=55141&date=${selectedDate.toISOString()}`,
+        {
+          method: "GET",
+          headers: {
+            Accept: "application/json",
+          },
         }
-      });
+      );
 
-      console.log("generate plan")
-      console.log(`/api/assignments/daily-agenda?user_id=55141&date=${selectedDate.toISOString()}`)
-      
+      console.log("generate plan");
+      console.log(
+        `/api/assignments/daily-agenda?user_id=55141&date=${selectedDate.toISOString()}`
+      );
+
       if (!response.ok) {
-        throw new Error('Failed to generate plan');
+        throw new Error("Failed to generate plan");
       }
 
       const data = await response.json();
       setPlan(data);
     } catch (error) {
-      console.error('Failed to generate plan:', error);
+      console.error("Failed to generate plan:", error);
     } finally {
       setIsLoading(false);
     }
@@ -84,31 +89,29 @@ export function PlanDayModal({ open, onOpenChange }: PlanDayModalProps) {
               value={selectedDate}
               className="rounded-md border w-full"
             />
-            <Button 
-              onClick={generatePlan} 
+            <Button
+              onClick={generatePlan}
               disabled={!selectedDate || isLoading}
               className="w-full"
             >
               {isLoading ? "Generating..." : "Generate Plan"}
             </Button>
-            
+
             {plan.length > 0 && (
               <div className="mt-4 space-y-2">
                 <h3 className="font-medium">Your Schedule:</h3>
                 {plan.map((task, index) => (
-                  <div 
-                    key={index}
-                    className="p-2 border rounded-md"
-                  >
+                  <div key={index} className="p-2 border rounded-md">
                     <div className="font-medium">{task.assignment.title}</div>
                     <div className="text-sm text-muted-foreground">
                       {new Date(task.timeBlock.start).toLocaleTimeString([], {
-                        hour: '2-digit',
-                        minute: '2-digit'
-                      })} - 
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      })}{" "}
+                      -
                       {new Date(task.timeBlock.end).toLocaleTimeString([], {
-                        hour: '2-digit',
-                        minute: '2-digit'
+                        hour: "2-digit",
+                        minute: "2-digit",
                       })}
                     </div>
                     <div className="text-sm">Priority: {task.priority}</div>

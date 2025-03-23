@@ -15,6 +15,7 @@ const WeeklyProductivityChart = ({ data }) => {
     <div className="bg-white rounded-2xl p-2">
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-xl font-semibold text-zinc-800">
+          Weekly Productivity
         </h2>
         <p className="text-sm text-zinc-500">
           Total: <span className="font-semibold">{totalHours} hours</span>

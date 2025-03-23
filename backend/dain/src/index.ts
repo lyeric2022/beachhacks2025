@@ -3,16 +3,16 @@ import { createClient } from "@supabase/supabase-js";
 import axios from "axios";
 import { defineDAINService, ToolConfig } from "@dainprotocol/service-sdk";
 import { CardUIBuilder, MapUIBuilder } from "@dainprotocol/utils";
-import * as dotenv from 'dotenv';
-import * as path from 'path';
-import * as os from 'os';
-import * as fs from 'fs';
+import * as dotenv from "dotenv";
+import * as path from "path";
+import * as os from "os";
+import * as fs from "fs";
 
 // Load environment variables from .env file
 const homeDir = os.homedir();
 const envPaths = [
-  path.join(process.cwd(), '.env'),                              // Current directory
-  path.join(homeDir, 'Repos/r/beachhacks2025/backend/dain/.env') // Project directory
+  path.join(process.cwd(), ".env"), // Current directory
+  path.join(homeDir, "Repos/r/beachhacks2025/backend/dain/.env"), // Project directory
 ];
 
 // Find and load the first available .env file
@@ -27,7 +27,7 @@ for (const envPath of envPaths) {
 }
 
 if (!envLoaded) {
-  console.warn('No .env file found. Using environment variables if available.');
+  console.warn("No .env file found. Using environment variables if available.");
   dotenv.config(); // Try to load from process.env anyway
 }
 
@@ -44,8 +44,12 @@ const SUPABASE_ANON_KEY = process.env.SUPABASE_ANON_KEY;
 
 // Validate required environment variables
 if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
-  console.error('Missing required environment variables: SUPABASE_URL or SUPABASE_ANON_KEY');
-  console.error('Please create a .env file with these variables or set them in your environment');
+  console.error(
+    "Missing required environment variables: SUPABASE_URL or SUPABASE_ANON_KEY"
+  );
+  console.error(
+    "Please create a .env file with these variables or set them in your environment"
+  );
   process.exit(1);
 }
 
@@ -88,7 +92,10 @@ const getSupabaseDataConfig: ToolConfig = {
 
       if (errorA || errorC || errorU) {
         const errMsg =
-          errorA?.message || errorC?.message || errorU?.message || "Unknown error";
+          errorA?.message ||
+          errorC?.message ||
+          errorU?.message ||
+          "Unknown error";
         return {
           text: `Error while fetching data from Supabase: ${errMsg}`,
           data: {},
@@ -168,7 +175,11 @@ const getWeatherConfig: ToolConfig = {
     })
     .describe("Current weather information"),
   pricing: { pricePerUse: 0, currency: "USD" },
-  handler: async ({ locationName, latitude, longitude }, agentInfo, context) => {
+  handler: async (
+    { locationName, latitude, longitude },
+    agentInfo,
+    context
+  ) => {
     console.log(
       `User / Agent ${agentInfo.id} requested weather at ${locationName} (${latitude},${longitude})`
     );
@@ -201,7 +212,9 @@ const getWeatherConfig: ToolConfig = {
             ])
             .build()
         )
-        .content(`Temperature: ${temperature_2m}°C\nWind Speed: ${wind_speed_10m} km/h`)
+        .content(
+          `Temperature: ${temperature_2m}°C\nWind Speed: ${wind_speed_10m} km/h`
+        )
         .build(),
     };
   },
@@ -211,7 +224,8 @@ const getWeatherConfig: ToolConfig = {
 const dainService = defineDAINService({
   metadata: {
     title: "Weather + Supabase DAIN Service",
-    description: "A DAIN service showing weather data and a Supabase query example",
+    description:
+      "A DAIN service showing weather data and a Supabase query example",
     version: "1.0.0",
     author: "Your Name",
     tags: ["weather", "supabase", "dain"],
@@ -239,10 +253,15 @@ async function outputSupabaseData() {
     const { data: courses, error: errorC } = await supabase
       .from("courses")
       .select("*");
-    const { data: userData, error: errorU } = await supabase.from("user").select("*");
+    const { data: userData, error: errorU } = await supabase
+      .from("user")
+      .select("*");
 
     if (errorA || errorC || errorU) {
-      console.error("Error fetching data from Supabase:", errorA || errorC || errorU);
+      console.error(
+        "Error fetching data from Supabase:",
+        errorA || errorC || errorU
+      );
       return;
     }
 

@@ -1,4 +1,3 @@
-
 const express = require("express");
 const cors = require("cors");
 const bodyParser = require("body-parser");
@@ -7,9 +6,7 @@ const courseRoutes = require("./routes/courseRoutes");
 const sessionRoutes = require("./routes/sessionRoute");
 
 const app = express();
-app.use(cors({
-    origin: '*'
-}));
+app.use(cors());
 const PORT = 7777;
 
 app.use(bodyParser.json());
