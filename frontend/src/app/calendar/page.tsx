@@ -4,6 +4,9 @@ import { useState, useMemo, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { fetchEvents, fetchEventsByDate } from '@/app/api/eventApi';
+// import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
+// import { Calendar } from "@/components/ui/calendar"
+import { PlanDayModal } from '@/components/PlanDayModal';
 
 interface Event {
   id: string;
@@ -13,12 +16,104 @@ interface Event {
   description?: string;
 }
 
+interface ScheduledTask {
+  assignment: {
+    title: string;
+    points_possible: number;
+  };
+  timeBlock: {
+    start: Date;
+    end: Date;
+  };
+  priority: number;
+}
+
+interface PlanDayModalProps {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+}
+
+// export function PlanDayModal({ open, onOpenChange }: PlanDayModalProps) {
+//   const [selectedDate, setSelectedDate] = useState<Date>();
+//   const [plan, setPlan] = useState<ScheduledTask[]>([]);
+//   const [isLoading, setIsLoading] = useState(false);
+
+//   const generatePlan = async () => {
+//     if (!selectedDate) return;
+    
+//     setIsLoading(true);
+//     try {
+//       const response = await fetch('/api/assignments/daily-agenda', {
+//         method: 'GET',
+//         headers: {
+//           'Content-Type': 'application/json',
+//         },
+//         body: JSON.stringify({
+//           user_id: "55141",
+//           date: selectedDate.toISOString()
+//         })
+//       });
+      
+//       const data = await response.json();
+//       setPlan(data);
+//     } catch (error) {
+//       console.error('Failed to generate plan:', error);
+//     } finally {
+//       setIsLoading(false);
+//     }
+//   };
+
+//   return (
+//     <Dialog open={open} onOpenChange={onOpenChange}>
+//       <DialogContent className="sm:max-w-[425px]">
+//         <DialogHeader>
+//           <DialogTitle>Plan My Day</DialogTitle>
+//         </DialogHeader>
+//         <div className="grid gap-4 py-4">
+//           <Calendar
+//             mode="single"
+//             selected={selectedDate}
+//             onSelect={setSelectedDate}
+//             className="rounded-md border"
+//           />
+//           <Button 
+//             onClick={generatePlan} 
+//             disabled={!selectedDate || isLoading}
+//           >
+//             {isLoading ? "Generating..." : "Generate Plan"}
+//           </Button>
+          
+//           {plan.length > 0 && (
+//             <div className="mt-4 space-y-2">
+//               <h3 className="font-medium">Your Schedule:</h3>
+//               {plan.map((task, index) => (
+//                 <div 
+//                   key={index}
+//                   className="p-2 border rounded-md"
+//                 >
+//                   <div className="font-medium">{task.assignment.title}</div>
+//                   <div className="text-sm text-muted-foreground">
+//                     {new Date(task.timeBlock.start).toLocaleTimeString()} - 
+//                     {new Date(task.timeBlock.end).toLocaleTimeString()}
+//                   </div>
+//                   <div className="text-sm">Priority: {task.priority}</div>
+//                 </div>
+//               ))}
+//             </div>
+//           )}
+//         </div>
+//       </DialogContent>
+//     </Dialog>
+//   );
+// }
+
 export default function CalendarPage() {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [view, setView] = useState<'month' | 'week'>('month');
   const [events, setEvents] = useState<Event[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [dayEvents, setDayEvents] = useState<{ [key: string]: Event[] }>({});
+  const [isPlanModalOpen, setIsPlanModalOpen] = useState(false);
 
   useEffect(() => {
     const loadEvents = async () => {
@@ -166,6 +261,12 @@ export default function CalendarPage() {
           </div>
           <div className="space-x-2">
             <Button
+              variant="default"
+              onClick={() => setIsPlanModalOpen(true)}
+            >
+              Plan My Day
+            </Button>
+            <Button
               variant={view === 'month' ? 'default' : 'outline'}
               onClick={() => setView('month')}
             >
@@ -244,6 +345,11 @@ export default function CalendarPage() {
           )}
         </div>
       </div>
+
+      <PlanDayModal 
+        open={isPlanModalOpen} 
+        onOpenChange={setIsPlanModalOpen}
+      />
     </div>
   );
 }
