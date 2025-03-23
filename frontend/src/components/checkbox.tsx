@@ -1,5 +1,14 @@
 "use client";
 import { useState } from "react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import EditModal from "@/components/EditModal";
 
 const AssignmentCheckbox = ({
   id,
@@ -10,11 +19,27 @@ const AssignmentCheckbox = ({
   toggleStatus,
 }) => {
   const [isChecked, setIsChecked] = useState(status === "Completed");
+  const [editModal, setEditModal] = useState(false);
+  const [editingAssignment, setEditingAssignment] = useState(null);
 
   const handleCheckboxChange = () => {
     setIsChecked(!isChecked);
     toggleStatus(id);
   };
+
+  const handleEditModal = () => {
+    setEditingAssignment({ id, title, duedate, course });
+    setEditModal(true);
+  };
+
+  // const handleDelete = async () => {
+  //   try {
+  //     await deleteDoc(docRef);
+  //     onClose();
+  //   } catch (error) {
+  //     console.error("Error deleting document: ", error);
+  //   }
+  // };
 
   return (
     <div className="w-full flex items-center gap-4 p-6">
@@ -37,18 +62,41 @@ const AssignmentCheckbox = ({
             </h2>
             <p className="text-sm text-gray-600">{course}</p>
           </div>
-          <div className="text-right">
-            <p className="text-sm font-medium">{duedate}</p>
-            <p
-              className={`text-sm font-semibold ${
-                status === "Completed" ? "text-green-600" : "text-red-600"
-              }`}
-            >
-              {status}
-            </p>
+          <div className="text-right flex items-center">
+            <div>
+              <p className="text-sm font-medium">{duedate}</p>
+              <p
+                className={`text-sm font-semibold ${
+                  status === "Completed" ? "text-green-600" : "text-red-600"
+                }`}
+              >
+                {status}
+              </p>
+            </div>
+            <div className="px-2">
+              <DropdownMenu>
+                <DropdownMenuTrigger>
+                  <img src="/ellipsis.svg" className="cursor-pointer" />
+                </DropdownMenuTrigger>
+                <DropdownMenuContent>
+                  <DropdownMenuItem onClick={handleEditModal}>
+                    Edit
+                  </DropdownMenuItem>
+
+                  {/* <DropdownMenuItem onClick={() => handleDelete}> */}
+                  {/* Delete */}
+                  {/* </DropdownMenuItem> */}
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
           </div>
         </div>
       </label>
+      <EditModal
+        open={editModal}
+        onClose={() => setEditModal(false)}
+        assignment={editingAssignment}
+      />
     </div>
   );
 };

@@ -1,16 +1,15 @@
+"use client";
 import React from "react";
+import { useState } from "react";
 import AssignmentCheckbox from "@/components/checkbox";
 
 const page = () => {
+  const [duedate, setDuedate] = useState();
+
   return (
-    <div>
-      <AssignmentCheckbox
-        title="title"
-        duedate="duedate"
-        course="course"
-        status="status"
-      />
-    </div>
+    <>
+      <input aria-label="Date and time" type="datetime-local" />
+    </>
   );
 };
 

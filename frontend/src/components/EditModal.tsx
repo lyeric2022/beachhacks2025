@@ -1,22 +1,9 @@
 "use client";
-import { useState } from "react";
-import { Modal } from "@mui/material";
-// import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
-// import { DateTimePicker } from '@mui/x-date-pickers';
-import { format } from "date-fns";
-import { Calendar as CalendarIcon } from "lucide-react";
+import { useState, useEffect } from "react";
+import { Modal, TextField, FormControlLabel, Switch } from "@mui/material";
 
-import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
-import { Calendar } from "@/components/ui/calendar";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import DateTimePicker from "react-datetime-picker";
-
-const AddModal = ({ open, onClose }) => {
+const EditModal = ({ open, onClose, assignment }) => {
+  console.log(assignment);
   const [title, setTitle] = useState("");
   const [course, setCourse] = useState("");
   const [duedate, setDuedate] = useState("");
@@ -33,13 +20,35 @@ const AddModal = ({ open, onClose }) => {
     setDuedate(e.target.value);
   };
 
+  //   useEffect(() => {
+  //     const getData = async () => {
+  //       try {
+  //         const docSnap = await getDoc(docRef);
+  //         const data = docSnap.data();
+  //         setItemName(data.item);
+  //         setCategory(data.category);
+  //         setQuantity(data.quantity);
+
+  //         if (!isNaN(data.quantity)) {
+  //           setIsSwitchOn(true);
+  //         } else {
+  //           setIsSwitchOn(false);
+  //         }
+  //       } catch (error) {
+  //         console.error("Error fetching data", error);
+  //       }
+  //     };
+
+  //     getData();
+  //   }, [docRef]);
+
   //   const handleSubmit = async () => {
   //     if (!itemName || !category || !quantity) {
   //       alert("Please fill out all fields.");
   //       return;
   //     }
   //     try {
-  //       await addDoc(collection(db, "items"), {
+  //       await updateDoc(docRef, {
   //         item: itemName,
   //         category,
   //         quantity: isSwitchOn ? parseFloat(quantity) : quantity,
@@ -56,7 +65,6 @@ const AddModal = ({ open, onClose }) => {
   return (
     <Modal open={open} onClose={onClose}>
       <div className="absolute top-1/2 left-1/2 translate-x-[-50%] translate-y-[-50%] bg-slate-50 mx-10 w-2/5 px-12 py-10 rounded-2xl border-zinc-500 border-8">
-        {/* <div> */}
         <div>
           <h4 className="font-medium  py-2 text-zinc-600">Assignment:</h4>
           <input
@@ -97,7 +105,7 @@ const AddModal = ({ open, onClose }) => {
             // onClick={handleSubmit}
             className="bg-zinc-500 rounded-full py-2 px-6 m-2 text-white text-center mt-4"
           >
-            Add Assignment
+            Edit Assignment
           </button>
         </div>
       </div>
@@ -105,4 +113,4 @@ const AddModal = ({ open, onClose }) => {
   );
 };
 
-export default AddModal;
+export default EditModal;
