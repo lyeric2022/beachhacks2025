@@ -4,7 +4,7 @@ import React from "react";
 import styles from "./page.module.css"
 import { Button } from "@/components/ui/button"
 import Link from "next/link";
-import { BookOpen, TrendingUp, Clock, Lightbulb, Target, Calendar } from "lucide-react";
+import { BookOpen, TrendingUp, Clock, Lightbulb, Target, Calendar, Activity, Brain } from "lucide-react";
 
 const InsightsPage = () => {
     return (
@@ -56,6 +56,16 @@ const InsightsPage = () => {
 
                     <div className={styles.card}>
                         <div className={styles.cardTitle}>
+                            <Activity className={styles.icon} size={18} />
+                            Learning Patterns
+                        </div>
+                        <p className={styles.cardText}>
+                            Your completed assignments show stronger performance in project-based work (CECS 448, CECS 491A) than theoretical assignments. Leverage this strength by creating mini-projects or practical applications when studying theoretical concepts in CECS 329 and EE 381 to improve retention and understanding.
+                        </p>
+                    </div>
+
+                    <div className={styles.card}>
+                        <div className={styles.cardTitle}>
                             <Lightbulb className={styles.icon} size={18} />
                             Recommendations
                         </div>
@@ -67,8 +77,6 @@ const InsightsPage = () => {
                             </div>
                             <p className={styles.cardText}>
                                 Complete CECS 325 Homework 2 and 3 (8 points each) this week. These form critical building blocks for upcoming midterms (20 points each). Dedicate 2 hours per assignment, focusing on implementation over concepts. Pay special attention to memory management and system calls, as these typically appear prominently on exams and require thorough understanding.
-
-
                             </p>
                         </div>
 

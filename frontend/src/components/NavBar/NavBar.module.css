@@ -48,7 +48,7 @@
 }
 
 .navButton:hover:not([data-state="open"]) {
-  background-color: #646464;
+  background-color: #7e7e7e;
 }
 
 .navButton[data-state="open"] {
