@@ -27,18 +27,17 @@ const AssignmentCheckbox = ({
   const [isChecked, setIsChecked] = useState(status === "Completed");
   const [editModal, setEditModal] = useState(false);
   const [editingAssignment, setEditingAssignment] = useState(null);
-  const [sessionStarted, setSessionStarted] = useState(false);
+  const [sessionStarted, setSessionStarted] = useState(null);
 
   useEffect(() => {
     const check = async () => {
       try {
-        const exists = await checkSessionExists(id, 55141); // replace with auth user if needed
-        setSessionStarted(exists);
+        const session = await checkSessionExists(id, 55141);
+        setSessionStarted(session);
       } catch (err) {
         console.error("Error checking session:", err);
       }
     };
-
     check();
   }, []);
   const handleCheckboxChange = () => {
@@ -71,9 +70,10 @@ const AssignmentCheckbox = ({
     try {
       const userId = 55141; // or get from auth context
       const session = await startSession(id, userId);
-      console.log("✅ Session started:", session);
+      setSessionStarted(session);
+      if (refreshAssignments) await refreshAssignments();
     } catch (err) {
-      console.error("❌ Failed to start session:", err);
+      console.error("Failed to start session:", err);
     }
   };
   return (
@@ -108,10 +108,10 @@ const AssignmentCheckbox = ({
                 {status}
               </p>
             </div>
-            {!sessionStarted && (
+            {sessionStarted?.is_active != true && (
               <button
                 onClick={handleStart}
-                className="bg-zinc-600 hover:bg-zinc-500 text-white ml-4 px-4 py-2 rounded-lg text-sm"
+                className="bg-zinc-600 hover:bg-zinc-500 text-white ml-4 px-4 py-2 rounded-lg text-sm cursor-pointer"
               >
                 ▶ Start
               </button>

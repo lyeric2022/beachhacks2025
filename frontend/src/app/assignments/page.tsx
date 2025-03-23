@@ -14,15 +14,6 @@ import AssignmentCheckbox from "@/components/checkbox";
 import AddModal from "@/components/AddModal";
 import { fetchAssignmentsByUser } from "../api/assignmentApi";
 import { updateAssignmentStatus } from "../api/assignmentApi";
-import {
-  Pagination,
-  PaginationContent,
-  PaginationEllipsis,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
-} from "@/components/ui/pagination";
 
 const Assignment = () => {
   const [tab, setTab] = useState("All");
