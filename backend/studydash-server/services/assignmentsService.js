@@ -113,6 +113,30 @@ const getTodayEvents = async (userId) => {
     return data
 }
 
+const getEventsByDate = async (userId, date) => {
+    const supabase = await getDbInstance();
+    const startOfDay = new Date(date);
+    startOfDay.setHours(0, 0, 0, 0);
+    
+    const endOfDay = new Date(date);
+    endOfDay.setHours(23, 59, 59, 999);
+
+    const { data, error } = await supabase
+        .from("events")
+        .select("*")
+        .eq("user_id", userId)
+        .gte("start", startOfDay.toISOString())
+        .lt("start", endOfDay.toISOString())
+        .order("start", { ascending: true });
+
+    if (error) {
+        console.error("Error fetching events by date:", error);
+        return [];
+    }
+
+    return data;
+};
+
 module.exports = {
     getAllAssignmentsByUser,
     getAssignmentById,
@@ -121,5 +145,6 @@ module.exports = {
     deleteAssignment,
     getUpcomingAssignments,
     getCourseGrade,
-    getTodayEvents
+    getTodayEvents,
+    getEventsByDate
 }

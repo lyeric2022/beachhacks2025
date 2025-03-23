@@ -1,8 +1,9 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { fetchEvents, fetchEventsByDate } from '@/app/api/eventApi';
 
 interface Event {
   id: string;
@@ -15,15 +16,38 @@ interface Event {
 export default function CalendarPage() {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [view, setView] = useState<'month' | 'week'>('month');
+  const [events, setEvents] = useState<Event[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [dayEvents, setDayEvents] = useState<{ [key: string]: Event[] }>({});
 
-  const events: Event[] = [
-    {
-      id: '1',
-      title: 'Study Session',
-      start: new Date(2025, 2, 24, 10, 0),
-      end: new Date(2025, 2, 24, 12, 0),
-    },
-  ];
+  useEffect(() => {
+    const loadEvents = async () => {
+      try {
+        const startOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
+        const endOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0);
+        const fetchedEvents = await fetchEventsByDate("55141", startOfMonth, endOfMonth);
+        // Transform the dates from strings to Date objects
+        const transformedEvents = fetchedEvents.map(event => ({
+          ...event,
+          start: new Date(event.start),
+          end: new Date(event.end)
+        }));
+        setEvents(transformedEvents);
+        console.log('Events loaded:', transformedEvents);
+      } catch (error) {
+        console.error('Failed to load events:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    loadEvents();
+  }, [currentDate]);
+
+  useEffect(() => {
+    console.log("events here")
+    console.log(events)
+  }, [events])
 
   const daysInMonth = useMemo(() => {
     const year = currentDate.getFullYear();
@@ -75,12 +99,41 @@ export default function CalendarPage() {
     });
   };
 
-  const getDayEvents = (date: Date) => {
-    console.log(date.toDateString());
-    console.log(events.map(event => event.start.toDateString()));
-    return events.filter(event => 
-      event.start.toDateString() === date.toDateString()
-    );
+  const loadDayEvents = async (date: Date) => {
+    const dateKey = date.toISOString().split('T')[0];
+    if (!dayEvents[dateKey]) {
+      try {
+        const events = await fetchEventsByDate("55141", date);
+        const transformedEvents = events.map(event => ({
+          ...event,
+          start: new Date(event.start),
+          end: new Date(event.end)
+        }));
+        setDayEvents(prev => ({
+          ...prev,
+          [dateKey]: transformedEvents
+        }));
+      } catch (error) {
+        console.error('Error loading day events:', error);
+        setDayEvents(prev => ({
+          ...prev,
+          [dateKey]: []
+        }));
+      }
+    }
+  };
+
+  useEffect(() => {
+    if (view === 'month') {
+      daysInMonth.forEach(({ date }) => loadDayEvents(date));
+    } else {
+      weekDays.forEach(date => loadDayEvents(date));
+    }
+  }, [view, currentDate]);
+
+  const getDayEvents = (date: Date): Event[] => {
+    const dateKey = date.toISOString().split('T')[0];
+    return dayEvents[dateKey] || [];
   };
 
   return (

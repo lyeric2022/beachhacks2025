@@ -77,3 +77,20 @@ exports.getDailyAgenda = async (req, res) => {
         res.status(500).json({ error: 'Failed to fetch today\'s events' });
     }
 };
+
+exports.getEventsByDate = async (req, res) => {
+    try {
+        const userId = req.query.user_id;
+        const date = req.query.date; // Expected format: YYYY-MM-DD
+        
+        if (!date) {
+            return res.status(400).json({ error: 'Date parameter is required' });
+        }
+
+        const events = await assignmentService.getEventsByDate(userId, date);
+        res.json(events);
+    } catch (error) {
+        console.error('Error in getEventsByDate:', error);
+        res.status(500).json({ error: 'Failed to fetch events' });
+    }
+};
