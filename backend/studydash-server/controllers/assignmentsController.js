@@ -1,6 +1,18 @@
-exports.getAssignment = async (req, res) => {
+const assignmentService = require('../services/assignmentsService');
+
+exports.getAssignmentByUser = async (req, res) => {
     try {
-        const users = "Hello"
+        console.log(req.query)
+        const users = await assignmentService.getAllAssignmentsByUser(req.query.user_id)
+        res.json(users);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+};
+
+exports.getAssignmentByCourse = async (req, res) => {
+    try {
+        const users = await assignmentService.getAllAssignmentsByCourse("someUserId + courseId")
         res.json(users);
     } catch (error) {
         res.status(500).json({ error: error.message });
@@ -9,7 +21,8 @@ exports.getAssignment = async (req, res) => {
 
 exports.createAssignment = async (req, res) => {
     try {
-        const user = "hello"
+        console.log(req.body)
+        const user = await assignmentService.addAssignment(req.body)
         res.status(201).json(user);
     } catch (error) {
         res.status(500).json({ error: error.message });
