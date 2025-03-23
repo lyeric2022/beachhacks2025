@@ -1,11 +1,22 @@
 const getDbInstance = require('../config/supabaseConfig')
 
-const getAllAssignments = async () => {
+const getAllAssignmentsByUser = async (userId) => {
     const supabase = await getDbInstance()
     const { data, error } = await supabase
         .from("assignments") 
         .select("*") 
         .eq("user_id", userId)
+
+    console.log(data)
+}
+
+const getAllAssignmentsByCourse = async () => {
+    const supabase = await getDbInstance()
+    const { data, error } = await supabase
+        .from("assignments") 
+        .select("*") 
+        .eq("user_id", userId)
+
     
 }
 
@@ -32,7 +43,7 @@ const updateAssignment = async (id, updatedData) => { }
 const deleteAssignment = async (id) => { }
 
 module.exports = {
-    getAllAssignments,
+    getAllAssignmentsByUser,
     getAssignmentById,
     addAssignment,
     updateAssignment,

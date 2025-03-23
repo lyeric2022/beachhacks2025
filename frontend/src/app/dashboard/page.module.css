@@ -1,0 +1,43 @@
+.container {
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    padding: 20px;
+    background-color: #f4f4f5;
+}
+
+.header {
+    font-size: 2rem;
+    font-weight: bold;
+}
+
+
+.headerItem {
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+.content {
+    flex: 1;
+    display: flex;
+    column-gap: 20px;
+    height: 75vh;
+}
+
+.content > div {
+    padding: 10px;
+    flex: 1;
+    border: 1px solid red;
+}
+
+.items {
+    display: flex;
+    border: 1px solid red;
+    flex-direction: column;
+    row-gap: 15px;
+    margin-top: 20px;
+}
+
+
