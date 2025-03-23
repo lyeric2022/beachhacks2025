@@ -28,3 +28,39 @@ exports.createAssignment = async (req, res) => {
         res.status(500).json({ error: error.message });
     }
 };
+
+exports.getUpcomingAssignments = async (req, res) => {
+    try {
+        console.log("enter controller")
+        console.log(req.query)
+        const userId = req.query.user_id; // Assuming you have auth middleware
+        const assignments = await assignmentService.getUpcomingAssignments(userId);
+        res.json(assignments);
+    } catch (error) {
+        console.error('Error in getUpcomingAssignments:', error);
+        res.status(500).json({ error: 'Failed to fetch upcoming assignments' });
+    }
+};
+
+exports.getCourseGrade = async (req, res) => {
+    try {
+        const userId = req.user.id;
+        const courseId = req.params.id;
+        const grade = await AssignmentsService.getCourseGrade(courseId, userId);
+        res.json(grade);
+    } catch (error) {
+        console.error('Error in getCourseGrade:', error);
+        res.status(500).json({ error: 'Failed to fetch course grade' });
+    }
+};
+
+exports.getTodayEvents = async (req, res) => {
+    try {
+        const userId = req.user.id;
+        const events = await EventsService.getTodayEvents(userId);
+        res.json(events);
+    } catch (error) {
+        console.error('Error in getTodayEvents:', error);
+        res.status(500).json({ error: 'Failed to fetch today\'s events' });
+    }
+};
