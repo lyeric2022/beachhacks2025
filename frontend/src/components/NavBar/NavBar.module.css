@@ -1,0 +1,31 @@
+.container {
+    background-color: white;
+    width: 250px;
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+}
+
+.top {
+    height: 100%;
+}
+
+.buttons {
+    row-gap: 10px;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    justify-content: center;
+    margin-top: 50px;
+}
+
+.logo {
+    font-size: 2rem;
+    font-weight: bolder;
+}
+
+.bottom {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
