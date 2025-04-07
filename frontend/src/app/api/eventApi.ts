@@ -52,20 +52,24 @@ export const fetchEvents = async (userId: string): Promise<Event[]> => {
   // }
 };
 
+// Update the fetchEventsByDate function to accept an optional endDate parameter
 export const fetchEventsByDate = async (
   userId: string,
-  date: Date
+  date: Date,
+  endDate?: Date  // Add the optional endDate parameter
 ): Promise<Event[]> => {
-  console.log("Mock: Fetching events by date", userId, date);
+  console.log("Mock: Fetching events by date", userId, date, endDate);
   return mockEvents;
   
   // Original code (commented out):
   // try {
   //   const formattedDate = date.toISOString().split("T")[0]; // Format: YYYY-MM-DD
+  //   const formattedEndDate = endDate ? endDate.toISOString().split("T")[0] : undefined;
   //   const response = await axios.get(`${API_BASE_URL}/events/by-date`, {
   //     params: {
   //       user_id: userId,
   //       date: formattedDate,
+  //       end_date: formattedEndDate
   //     },
   //   });
   //   return response.data || []; // Return empty array if no data
