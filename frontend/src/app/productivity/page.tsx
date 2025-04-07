@@ -6,8 +6,7 @@ import { Button } from "@/components/ui/button";
 import { CircularProgressbar } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
 import TimerTaskCard from "@/components/TaskTimerCard";
-import { fetchSessionsByUser } from "../api/sessionApi";
-import { updateSession } from "../api/sessionApi";
+import { fetchSessionsByUser, updateSession } from "../api/sessionApi";
 
 const TIMER_PRESETS = {
   pomodoro: 25 * 60,
@@ -15,13 +14,30 @@ const TIMER_PRESETS = {
   long: 15 * 60,
 };
 
-const page = () => {
+interface SessionTask {
+  id: number;
+  assignment_id: number;
+  user_id: number;
+  duration: number;
+  start_time?: string;
+  end_time?: string;
+  status: string;
+  is_active: boolean;
+  assignments?: {
+    title: string;
+    courses?: {
+      title: string;
+    }
+  }
+}
+
+const ProductivityPage = (): React.JSX.Element => {
   const [mode, setMode] = useState<"pomodoro" | "short" | "long">("pomodoro");
   const [initialTime, setInitialTime] = useState(TIMER_PRESETS[mode]);
   const [remainingTime, setRemainingTime] = useState(initialTime);
   const [progress, setProgress] = useState(100);
   const [isPaused, setIsPaused] = useState(true);
-  const [tasks, setTasks] = useState([]);
+  const [tasks, setTasks] = useState<SessionTask[]>([]);
 
   useEffect(() => {
     const loadSessions = async () => {
@@ -46,22 +62,22 @@ const page = () => {
             taskMap.set(key, {
               ...existing,
               duration: existing.duration + duration,
-              start_time: existing.start_time
+              start_time: existing.start_time && session.start_time
                 ? new Date(
                     Math.min(
                       new Date(existing.start_time).getTime(),
                       new Date(session.start_time).getTime()
                     )
                   ).toISOString()
-                : session.start_time,
-              end_time: existing.end_time
+                : existing.start_time || session.start_time,
+              end_time: existing.end_time && session.end_time
                 ? new Date(
                     Math.max(
                       new Date(existing.end_time).getTime(),
                       new Date(session.end_time).getTime()
                     )
                   ).toISOString()
-                : session.end_time,
+                : existing.end_time || session.end_time,
               status: session.is_active ? "In Progress" : existing.status,
               is_active: session.is_active || existing.is_active,
             });
@@ -85,7 +101,7 @@ const page = () => {
   }, [mode]);
 
   useEffect(() => {
-    let interval: any;
+    let interval: NodeJS.Timeout | undefined;
 
     if (!isPaused) {
       interval = setInterval(() => {
@@ -104,27 +120,27 @@ const page = () => {
   useEffect(() => {
     const progressValue = (remainingTime / initialTime) * 100;
     setProgress(progressValue);
-  }, [remainingTime]);
+  }, [remainingTime, initialTime]);
 
-  const formatTime = (seconds: number) => {
+  const formatTime = (seconds: number): string => {
     const mins = Math.floor(seconds / 60);
     const secs = seconds % 60;
     return `${String(mins).padStart(2, "0")}:${String(secs).padStart(2, "0")}`;
   };
 
-  const toggleTimer = () => {
+  const toggleTimer = (): void => {
     console.log("toggling");
     setIsPaused((prev) => !prev);
   };
 
-  const handleModeChange = (newMode: "pomodoro" | "short" | "long") => {
+  const handleModeChange = (newMode: "pomodoro" | "short" | "long"): void => {
     setMode(newMode);
   };
 
   return (
     <div className="container mx-10 my-10 overflow-scroll">
       <div>
-        <div className="font-bold text-2xl my-8">Productivitiy Tool</div>
+        <div className="font-bold text-2xl my-8">Productivity Tool</div>
         <div className={styles.content}>
           <div>
             <div className={styles.left}>
@@ -173,27 +189,27 @@ const page = () => {
           </div>
           <div className="space-y-4 overflow-scroll">
             {tasks
-              .filter((task) => task.status !== "Completed") // ✅ Filter out completed tasks
-              .map((task) => (
+              .filter((task: SessionTask) => task.status !== "Completed")
+              .map((task: SessionTask) => (
                 <TimerTaskCard
                   key={task.id}
                   task={task}
-                  onUpdate={async (updatedTask, id) => {
+                  onUpdate={async (updatedTask: SessionTask, id: number) => {
                     try {
                       await updateSession(id, {
                         status: updatedTask.status,
                         is_active: updatedTask.is_active,
                         end_time: updatedTask.end_time,
-                        duration: updatedTask.duration, // ✅ add this line
+                        duration: updatedTask.duration,
                       });
                     } catch (err) {
                       console.error("Failed to update session:", err);
                     }
 
-                    setTasks((prev) =>
-                      updatedTask.status === "Completed"
-                        ? prev.filter((t) => t.id !== id)
-                        : prev.map((t) => (t.id === id ? updatedTask : t))
+                    setTasks((prev: SessionTask[]) =>
+                      prev.map((t: SessionTask) =>
+                        t.id === id ? updatedTask : t
+                      )
                     );
                   }}
                 />
@@ -205,4 +221,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default ProductivityPage;
