@@ -8,9 +8,12 @@ interface Assignment {
   due_date: string;
   user_id: number;
   course?: string;
+  course_title?: string; // Add this to hold course title
   priority?: string;
   status?: string;
   completion?: number;
+  // We need to include this for mock data structure compatibility
+  courses?: { id: number; title: string };
 }
 
 // Comment out the real API URL
@@ -71,7 +74,13 @@ export const addAssignment = async (assignment: Assignment): Promise<Assignment>
 
 export const updateAssignmentStatus = async (id: number, status: string): Promise<Assignment> => {
   console.log("Mock: Updating assignment status", id, status);
-  return { id, status } as Assignment;
+  return { 
+    id, 
+    status,
+    title: "Updated Assignment",
+    user_id: 55141,
+    due_date: new Date().toISOString() 
+  };
   
   // Original code (commented out):
   // const response = await axios.put(`/assignments/${id}`, { status });
@@ -80,7 +89,13 @@ export const updateAssignmentStatus = async (id: number, status: string): Promis
 
 export const updateAssignment = async (id: number, updatedData: Partial<Assignment>): Promise<Assignment> => {
   console.log("Mock: Updating assignment", id, updatedData);
-  return { id, ...updatedData } as Assignment;
+  return { 
+    id, 
+    ...updatedData,
+    title: updatedData.title || "Updated Assignment",
+    user_id: 55141,
+    due_date: updatedData.due_date || new Date().toISOString()
+  };
   
   // Original code (commented out):
   // const response = await axios.put(`/assignments/${id}`, updatedData);
