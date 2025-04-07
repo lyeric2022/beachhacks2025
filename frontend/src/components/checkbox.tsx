@@ -10,8 +10,32 @@ import {
 } from "@/components/ui/dropdown-menu";
 import EditModal from "@/components/EditModal";
 import { deleteAssignment } from "@/app/api/assignmentApi";
-import { startSession } from "@/app/api/sessionApi";
-import { checkSessionExists } from "@/app/api/sessionApi";
+import { startSession, checkSessionExists } from "@/app/api/sessionApi";
+
+// Interface for the session object returned by the API
+interface Session {
+  id: number;
+  assignment_id: number;
+  user_id: number;
+  start_time: string;
+  end_time?: string | null;
+  duration?: number;
+  is_active: boolean;
+  status?: string;
+}
+
+// Interface for the component props
+interface AssignmentCheckboxProps {
+  id: number;
+  title: string;
+  duedate: string;
+  rawdate: string;
+  course: string;
+  course_id: number;
+  status: string;
+  toggleStatus: (id: number) => void;
+  refreshAssignments: () => Promise<void>;
+}
 
 const AssignmentCheckbox = ({
   id,
@@ -23,14 +47,20 @@ const AssignmentCheckbox = ({
   status,
   toggleStatus,
   refreshAssignments,
-}) => {
-  const [isChecked, setIsChecked] = useState(status === "Completed");
-  const [editModal, setEditModal] = useState(false);
-  const [editingAssignment, setEditingAssignment] = useState(null);
-  const [sessionStarted, setSessionStarted] = useState(null);
+}: AssignmentCheckboxProps): JSX.Element => {
+  const [isChecked, setIsChecked] = useState<boolean>(status === "Completed");
+  const [editModal, setEditModal] = useState<boolean>(false);
+  const [editingAssignment, setEditingAssignment] = useState<{
+    id: number;
+    title: string;
+    course: string;
+    rawDueDate: string;
+    course_id: number;
+  } | null>(null);
+  const [sessionStarted, setSessionStarted] = useState<Session | null>(null);
 
   useEffect(() => {
-    const check = async () => {
+    const check = async (): Promise<void> => {
       try {
         const session = await checkSessionExists(id, 55141);
         setSessionStarted(session);
@@ -39,34 +69,35 @@ const AssignmentCheckbox = ({
       }
     };
     check();
-  }, []);
-  const handleCheckboxChange = () => {
+  }, [id]); // Added id as a dependency
+
+  const handleCheckboxChange = (): void => {
     setIsChecked(!isChecked);
     toggleStatus(id);
   };
 
-  const handleEditModal = () => {
+  const handleEditModal = (): void => {
     setEditingAssignment({
       id,
       title,
       course,
-      rawDueDate: rawdate,
+      rawDueDate: rawdate, // Note: Consistent naming with EditModal component
       course_id,
     });
     setEditModal(true);
   };
 
-  const handleDelete = async () => {
+  const handleDelete = async (): Promise<void> => {
     try {
-      await deleteAssignment(id); // or assignment.id
+      await deleteAssignment(id);
       console.log("✅ Assignment deleted");
-      if (refreshAssignments) await refreshAssignments(); // optional
+      if (refreshAssignments) await refreshAssignments();
     } catch (error) {
       console.error("❌ Error deleting assignment:", error);
     }
   };
 
-  const handleStart = async () => {
+  const handleStart = async (): Promise<void> => {
     try {
       const userId = 55141; // or get from auth context
       const session = await startSession(id, userId);
@@ -76,16 +107,17 @@ const AssignmentCheckbox = ({
       console.error("Failed to start session:", err);
     }
   };
+
   return (
     <div className="w-full flex items-center gap-4 p-6">
       <input
-        id={id}
+        id={`checkbox-${id}`} // Added unique ID to avoid potential duplicates
         type="checkbox"
         checked={isChecked}
         onChange={handleCheckboxChange}
         className="w-5 h-5 accent-zinc-500"
       />
-      <label htmlFor={id} className="w-full cursor-pointer">
+      <label htmlFor={`checkbox-${id}`} className="w-full cursor-pointer">
         <div className="flex justify-between">
           <div>
             <h2
@@ -108,7 +140,7 @@ const AssignmentCheckbox = ({
                 {status}
               </p>
             </div>
-            {sessionStarted?.is_active != true && (
+            {sessionStarted?.is_active !== true && ( // Fixed comparison
               <button
                 onClick={handleStart}
                 className="bg-zinc-600 hover:bg-zinc-500 text-white ml-4 px-4 py-2 rounded-lg text-sm cursor-pointer"
@@ -120,7 +152,7 @@ const AssignmentCheckbox = ({
             <div className="px-2">
               <DropdownMenu>
                 <DropdownMenuTrigger>
-                  <img src="/ellipsis.svg" className="cursor-pointer" />
+                  <img src="/ellipsis.svg" className="cursor-pointer" alt="Menu" /> {/* Added alt attribute */}
                 </DropdownMenuTrigger>
                 <DropdownMenuContent>
                   <DropdownMenuItem onClick={handleEditModal}>
