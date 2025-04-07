@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, ChangeEvent } from "react";
 import { Modal } from "@mui/material";
 import { addAssignment } from "@/app/api/assignmentApi";
 import { fetchCourses } from "@/app/api/coursesApi";
@@ -11,21 +11,27 @@ interface AddModalProps {
   refreshAssignments: () => Promise<void>;
 }
 
+// Define Course interface
+interface Course {
+  id: number;
+  title: string;
+}
+
 const AddModal = ({ open, onClose, refreshAssignments }: AddModalProps) => {
   const [title, setTitle] = useState("");
   const [course, setCourse] = useState("");
   const [duedate, setDuedate] = useState("");
-  const [courses, setCourses] = useState([]);
+  const [courses, setCourses] = useState<Course[]>([]);
 
-  const handleTitleChange = (e) => {
+  const handleTitleChange = (e: ChangeEvent<HTMLInputElement>): void => {
     setTitle(e.target.value);
   };
 
-  const handleCourseChange = (e) => {
+  const handleCourseChange = (e: ChangeEvent<HTMLSelectElement>): void => {
     setCourse(e.target.value);
   };
 
-  const handleDueChange = (e) => {
+  const handleDueChange = (e: ChangeEvent<HTMLInputElement>): void => {
     setDuedate(e.target.value);
   };
 
@@ -42,7 +48,7 @@ const AddModal = ({ open, onClose, refreshAssignments }: AddModalProps) => {
     loadCourses();
   }, []);
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (): Promise<void> => {
     if (!title || !course || !duedate) {
       alert("Please fill out all fields.");
       return;
@@ -50,7 +56,7 @@ const AddModal = ({ open, onClose, refreshAssignments }: AddModalProps) => {
     try {
       await addAssignment({
         title,
-        course_id: course,
+        course_id: parseInt(course),
         due_date: duedate,
         user_id: 55141, // or get from auth context
         status: "In Progress", // optional default
@@ -87,12 +93,12 @@ const AddModal = ({ open, onClose, refreshAssignments }: AddModalProps) => {
           <h4 className="font-medium py-2 text-zinc-600">Course:</h4>
           <select
             value={course}
-            onChange={(e) => setCourse(e.target.value)}
+            onChange={handleCourseChange}
             className="rounded-full my-2 px-5 py-2 bg-transparent border-2 w-full border-zinc-300"
             required
           >
             <option value="">Select a course</option>
-            {courses.map((c) => (
+            {courses.map((c: Course) => (
               <option key={c.id} value={c.id}>
                 {c.title}
               </option>
