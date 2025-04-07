@@ -56,6 +56,7 @@ const Assignment = () => {
         status: a.status ?? "In Progress",
       }));
 
+      // Fix the date comparison in the sort function
       formatted.sort((a, b) => {
         if (a.status === "Completed" && b.status !== "Completed") return 1;
         if (b.status === "Completed" && a.status !== "Completed") return -1;
@@ -63,7 +64,8 @@ const Assignment = () => {
         const dateA = a.rawDueDate ? new Date(a.rawDueDate) : null;
         const dateB = b.rawDueDate ? new Date(b.rawDueDate) : null;
 
-        if (dateA && dateB) return dateA - dateB;
+        // Convert to timestamps for TypeScript-safe comparison
+        if (dateA && dateB) return dateA.getTime() - dateB.getTime();
         if (!dateA && dateB) return 1;
         if (dateA && !dateB) return -1;
         return 0;
