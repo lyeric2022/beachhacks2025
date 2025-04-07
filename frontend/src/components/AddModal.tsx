@@ -4,7 +4,14 @@ import { Modal } from "@mui/material";
 import { addAssignment } from "@/app/api/assignmentApi";
 import { fetchCourses } from "@/app/api/coursesApi";
 
-const AddModal = ({ open, onClose, refreshAssignments }) => {
+// Update the props definition
+interface AddModalProps {
+  open: boolean;
+  onClose: () => void;
+  refreshAssignments: () => Promise<void>;
+}
+
+const AddModal = ({ open, onClose, refreshAssignments }: AddModalProps) => {
   const [title, setTitle] = useState("");
   const [course, setCourse] = useState("");
   const [duedate, setDuedate] = useState("");

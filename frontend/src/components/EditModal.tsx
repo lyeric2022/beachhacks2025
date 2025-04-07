@@ -4,10 +4,27 @@ import { Modal, TextField, FormControlLabel, Switch } from "@mui/material";
 import { updateAssignment } from "@/app/api/assignmentApi";
 import { fetchCourses } from "@/app/api/coursesApi";
 
-const EditModal = ({ open, onClose, assignment, refreshAssignments }) => {
+// Update the props definition
+interface EditModalProps {
+  open: boolean;
+  onClose: () => void;
+  assignment: {
+    id: number;
+    title: string;
+    course_id?: number | string;
+    rawDueDate?: string;
+  } | null;
+  refreshAssignments: () => Promise<void>;
+}
+
+const EditModal = ({ open, onClose, assignment, refreshAssignments }: EditModalProps) => {
   const [title, setTitle] = useState("");
   const [courseId, setCourseId] = useState("");
-  const [courses, setCourses] = useState([]);
+  interface Course {
+    id: number;
+    title: string;
+  }
+  const [courses, setCourses] = useState<Course[]>([]);
   const [duedate, setDuedate] = useState("");
 
   useEffect(() => {
@@ -39,13 +56,14 @@ const EditModal = ({ open, onClose, assignment, refreshAssignments }) => {
       return;
     }
 
-    try {
-      await updateAssignment(assignment.id, {
-        title,
-        course_id: courseId,
-        due_date: duedate,
-      });
+    if (!assignment) return;
+    await updateAssignment(assignment.id, {
+      title,
+      course_id: Number(courseId),
+      due_date: duedate,
+    });
 
+    try {
       if (refreshAssignments) {
         await refreshAssignments();
       }

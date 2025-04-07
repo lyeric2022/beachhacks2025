@@ -47,8 +47,8 @@ const Assignment = () => {
       };
 
       const formatted = data.map((a) => ({
-        id: a.id,
-        title: a.title,
+        id: a.id || 0, // Add fallback for id to ensure it's never undefined
+        title: a.title || "Untitled",
         duedate: formatDate(a.due_date),
         rawDueDate: a.due_date,
         course_id: a.courses?.id || 0, // Use optional chaining and provide a fallback

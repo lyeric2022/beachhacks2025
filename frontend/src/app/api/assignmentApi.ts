@@ -1,19 +1,18 @@
 import axios from "axios";
 
-// Define interface for assignment data
+// Define comprehensive interface for assignment data
 interface Assignment {
   id?: number;
   title: string;
   description?: string;
   due_date: string;
   user_id: number;
-  course?: string;
-  course_title?: string; // Add this to hold course title
-  priority?: string;
+  course_id?: number;
   status?: string;
-  completion?: number;
-  // We need to include this for mock data structure compatibility
-  courses?: { id: number; title: string };
+  courses?: { 
+    id: number; 
+    title: string 
+  };
 }
 
 // Comment out the real API URL
@@ -53,10 +52,6 @@ const mockAssignments = [
 export const fetchAssignmentsByUser = async (userId: number): Promise<Assignment[]> => {
   console.log("Mock: Fetching assignments for user", userId);
   return mockAssignments;
-  
-  // Original code (commented out):
-  // const response = await axios.get(`/assignments?user_id=${userId}`);
-  // return response.data;
 };
 
 export const addAssignment = async (assignment: Assignment): Promise<Assignment> => {
@@ -64,12 +59,8 @@ export const addAssignment = async (assignment: Assignment): Promise<Assignment>
   return {
     ...assignment,
     id: Math.floor(Math.random() * 1000),
-    courses: { id: 1, title: assignment.course || "Unknown Course" }
+    courses: { id: Number(assignment.course_id) || 1, title: assignment.courses?.title || "Unknown Course" }
   };
-  
-  // Original code (commented out):
-  // const response = await axios.post(`/assignments`, assignment);
-  // return response.data;
 };
 
 export const updateAssignmentStatus = async (id: number, status: string): Promise<Assignment> => {
@@ -81,10 +72,6 @@ export const updateAssignmentStatus = async (id: number, status: string): Promis
     user_id: 55141,
     due_date: new Date().toISOString() 
   };
-  
-  // Original code (commented out):
-  // const response = await axios.put(`/assignments/${id}`, { status });
-  // return response.data;
 };
 
 export const updateAssignment = async (id: number, updatedData: Partial<Assignment>): Promise<Assignment> => {
@@ -96,15 +83,8 @@ export const updateAssignment = async (id: number, updatedData: Partial<Assignme
     user_id: 55141,
     due_date: updatedData.due_date || new Date().toISOString()
   };
-  
-  // Original code (commented out):
-  // const response = await axios.put(`/assignments/${id}`, updatedData);
-  // return response.data;
 };
 
 export const deleteAssignment = async (id: number): Promise<void> => {
   console.log("Mock: Deleting assignment", id);
-  // Original code (commented out):
-  // const response = await axios.delete(`/assignments/${id}`);
-  // return response.data;
 };

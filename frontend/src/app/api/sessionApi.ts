@@ -1,11 +1,24 @@
 import axios from "axios";
 
-// Comment out real API base URL
-// axios.defaults.baseURL = "http://localhost:7777/api";
+// Define Session interface
+interface Session {
+  id: number;
+  assignment_id: number;
+  user_id: number;
+  start_time: string;
+  end_time?: string | null;
+  duration?: number;
+  is_active: boolean;
+  status?: string;
+  assignments?: {
+    title: string;
+    courses: {
+      title: string;
+    }
+  };
+}
 
-// Add TypeScript types to fix build errors
-export const startSession = async (assignment_id: number, user_id: number) => {
-  // Return mock data instead of making API call
+export const startSession = async (assignment_id: number, user_id: number): Promise<Session> => {
   console.log("Mock: Starting session", assignment_id, user_id);
   return {
     id: Math.floor(Math.random() * 1000),
@@ -15,17 +28,9 @@ export const startSession = async (assignment_id: number, user_id: number) => {
     is_active: true,
     status: "In Progress"
   };
-  
-  // Original code (commented out):
-  // const response = await axios.post("/session", {
-  //   assignment_id,
-  //   user_id,
-  // });
-  // return response.data;
 };
 
-export const checkSessionExists = async (assignment_id: number, user_id: number) => {
-  // Return mock data
+export const checkSessionExists = async (assignment_id: number, user_id: number): Promise<Session | null> => {
   console.log("Mock: Checking session", assignment_id, user_id);
   return {
     id: Math.floor(Math.random() * 1000),
@@ -34,16 +39,9 @@ export const checkSessionExists = async (assignment_id: number, user_id: number)
     start_time: new Date().toISOString(),
     is_active: false
   };
-  
-  // Original code (commented out):
-  // const response = await axios.get("/session/active", {
-  //   params: { assignment_id, user_id },
-  // });
-  // return response.data.session;
 };
 
-export const fetchSessionsByUser = async (user_id: number) => {
-  // Return mock data
+export const fetchSessionsByUser = async (user_id: number): Promise<Session[]> => {
   console.log("Mock: Fetching sessions for user", user_id);
   return [
     {
@@ -75,34 +73,26 @@ export const fetchSessionsByUser = async (user_id: number) => {
       }
     }
   ];
-  
-  // Original code (commented out):
-  // console.log("user", user_id);
-  // const response = await axios.get("/session", {
-  //   params: {
-  //     user_id: user_id,
-  //   },
-  // });
-  // return response.data;
 };
+
+interface SessionUpdate {
+  status?: string;
+  is_active?: boolean;
+  end_time?: string;
+  duration?: number;
+}
 
 export const updateSession = async (
   session_id: number,
-  updates: Partial<{
-    status: string;
-    is_active: boolean;
-    end_time: string;
-    duration: number;
-  }>
-) => {
-  // Just log and return the updates
+  updates: SessionUpdate
+): Promise<Session> => {
   console.log("Mock: Updating session", session_id, updates);
   return {
     id: session_id,
+    assignment_id: 0,
+    user_id: 55141,
+    start_time: new Date().toISOString(),
+    is_active: updates.is_active ?? false,
     ...updates
   };
-  
-  // Original code (commented out):
-  // const response = await axios.patch(`/session/${session_id}`, updates);
-  // return response.data;
 };
