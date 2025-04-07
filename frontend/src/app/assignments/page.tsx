@@ -51,8 +51,8 @@ const Assignment = () => {
         title: a.title,
         duedate: formatDate(a.due_date),
         rawDueDate: a.due_date,
-        course_id: a.courses.id,
-        course: a.courses.title,
+        course_id: a.courses?.id || 0, // Use optional chaining and provide a fallback
+        course: a.courses?.title || "No Course", // Use optional chaining and provide a fallback
         status: a.status ?? "In Progress",
       }));
 
