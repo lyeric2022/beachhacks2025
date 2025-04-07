@@ -3,8 +3,8 @@ import axios from "axios";
 interface Event {
   id: string;
   title: string;
-  start_time: string;
-  end_time: string;
+  start: string;  // Change from start_time
+  end: string;    // Change from end_time
   description?: string;
 }
 
@@ -16,22 +16,22 @@ const mockEvents = [
   {
     id: "1",
     title: "Physics Study Session",
-    start_time: "2024-05-20T10:00:00Z",
-    end_time: "2024-05-20T12:00:00Z",
+    start: "2024-05-20T10:00:00Z", // Rename from start_time to start
+    end: "2024-05-20T12:00:00Z",   // Rename from end_time to end
     description: "Review Chapter 5"
   },
   {
     id: "2",
     title: "Group Project Meeting",
-    start_time: "2024-05-21T15:00:00Z",
-    end_time: "2024-05-21T16:30:00Z",
+    start: "2024-05-21T15:00:00Z",
+    end: "2024-05-21T16:30:00Z",
     description: "Discuss database design"
   },
   {
     id: "3",
     title: "CS Midterm",
-    start_time: "2024-05-22T09:00:00Z",
-    end_time: "2024-05-22T11:00:00Z",
+    start: "2024-05-22T09:00:00Z",
+    end: "2024-05-22T11:00:00Z",
     description: "Algorithms and data structures"
   }
 ];
