@@ -18,7 +18,15 @@ import { updateAssignmentStatus } from "../api/assignmentApi";
 const Assignment = () => {
   const [tab, setTab] = useState("All");
   const [addModal, setAddModal] = useState(false);
-  const [assignments, setAssignments] = useState([]);
+  const [assignments, setAssignments] = useState<Array<{
+    id: number;
+    title: string;
+    duedate: string;
+    rawDueDate: string;
+    course_id: number;
+    course: string;
+    status: string;
+  }>>([]);
   const [loading, setLoading] = useState(true);
   const userId = 55141;
 
@@ -26,7 +34,7 @@ const Assignment = () => {
     try {
       const data = await fetchAssignmentsByUser(userId);
 
-      const formatDate = (iso) => {
+      const formatDate = (iso: string) => {
         if (!iso) return "No due date";
         return new Date(iso).toLocaleString("en-US", {
           month: "short",
@@ -73,7 +81,7 @@ const Assignment = () => {
     getData();
   }, []);
 
-  const toggleStatus = async (id) => {
+  const toggleStatus = async (id: number) => {
     const updated = assignments.map((assignment) => {
       if (assignment.id === id) {
         const newStatus =
@@ -85,10 +93,14 @@ const Assignment = () => {
 
     setAssignments(updated);
 
-    // Find the updated status
+    // Find the updated status and add null check
     const changed = updated.find((a) => a.id === id);
     try {
-      await updateAssignmentStatus(id, changed.status);
+      if (changed) {
+        await updateAssignmentStatus(id, changed.status);
+      } else {
+        console.error("Assignment not found after update");
+      }
     } catch (error) {
       console.error("Failed to update status:", error);
     }
