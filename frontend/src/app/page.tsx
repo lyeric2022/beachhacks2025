@@ -2,10 +2,30 @@
 "use client";
 import { useEffect, useState } from "react";
 import WeeklyProductivityChart from "@/components/WeeklyProductivityChart";
+import { BookOpen, Clock } from "lucide-react";
 
-const Dashboard = () => {
-  const [weeklyStats, setWeeklyStats] = useState([]);
-  const [upcoming, setUpcoming] = useState([
+const formatTime = (timeString: string): string => {
+  const date = new Date(timeString);
+  return date.toLocaleTimeString('en-US', { 
+    hour: 'numeric', 
+    minute: '2-digit', 
+    hour12: true 
+  });
+};
+
+interface WeeklyStats {
+  day: string;
+  hours: number;
+}
+
+const Dashboard: React.FC = () => {
+  const [weeklyStats, setWeeklyStats] = useState<WeeklyStats[]>([]);
+  const [upcoming, setUpcoming] = useState<Array<{
+    id: number;
+    title: string;
+    due_date: string;
+    course: string;
+  }>>([
     {
       id: 1,
       title: "Physics Homework",
@@ -25,7 +45,14 @@ const Dashboard = () => {
       course: "ENGL 100"
     }
   ]);
-  const [today, setToday] = useState([
+  const [today, setToday] = useState<Array<{
+    id: number;
+    title: string;
+    course: string;
+    start_time: string;
+    end_time: string;
+    status: string;
+  }>>([
     {
       id: 1,
       title: "Study Session - Physics",
@@ -54,12 +81,16 @@ const Dashboard = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
+    // TODO: Implement these API calls when backend is ready
     // fetchWeeklyStats()
     // fetchUpcomingAssignments()
     // fetchTodayAgenda()
+    
+    // For now, just simulate data loading
+    setTimeout(() => setIsLoading(false), 1000);
   }, []);
 
-  const weekData = [
+  const weekData: WeeklyStats[] = [
     { day: "Mon", hours: 4.2 },
     { day: "Tue", hours: 3.1 },
     { day: "Wed", hours: 2.5 },
@@ -70,7 +101,7 @@ const Dashboard = () => {
   ];
 
   // Update the status badge in the agenda items
-  const getStatusBadge = (status) => {
+  const getStatusBadge = (status: string): string => {
     switch (status) {
       case 'active':
         return 'bg-green-100 text-green-800';
