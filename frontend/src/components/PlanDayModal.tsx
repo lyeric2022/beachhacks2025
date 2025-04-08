@@ -6,8 +6,8 @@ import * as Dialog from "@radix-ui/react-dialog";
 import { X } from "lucide-react";
 import { Calendar } from "react-calendar";
 import "react-calendar/dist/Calendar.css";
-// Import the Value type for proper typing
-import { Value } from "react-calendar/dist/cjs/shared/types";
+// Remove the problematic import 
+// import { Value } from "react-calendar/dist/cjs/shared/types";
 
 // Add DialogHeader component
 const DialogHeader = ({ children }: { children: React.ReactNode }): JSX.Element => (
@@ -38,8 +38,8 @@ export function PlanDayModal({ open, onOpenChange }: PlanDayModalProps): JSX.Ele
   const [plan, setPlan] = useState<ScheduledTask[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  // Create a type-safe handler for the Calendar component
-  const handleDateChange = (value: Value): void => {
+  // Create a simpler type-safe handler that covers all possible Calendar onChange values
+  const handleDateChange = (value: Date | Date[] | null): void => {
     if (value instanceof Date) {
       setSelectedDate(value);
     } else if (Array.isArray(value) && value.length > 0 && value[0] instanceof Date) {
