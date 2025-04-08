@@ -20,15 +20,15 @@ interface SessionTask {
   user_id: number;
   duration: number;
   start_time?: string;
-  end_time?: string;
+  end_time?: string | null;
   status: string;
   is_active: boolean;
-  assignments?: {
+  assignments: {
     title: string;
-    courses?: {
+    courses: {
       title: string;
-    }
-  }
+    };
+  };
 }
 
 const ProductivityPage = (): React.JSX.Element => {
