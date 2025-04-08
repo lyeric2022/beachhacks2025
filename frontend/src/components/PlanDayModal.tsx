@@ -6,13 +6,11 @@ import * as Dialog from "@radix-ui/react-dialog";
 import { X } from "lucide-react";
 import { Calendar } from "react-calendar";
 import "react-calendar/dist/Calendar.css";
-import { MouseEvent } from "react";
-
-// Import the exact type from react-calendar
-// Or use the complete function signature directly
+// Import the Value type for proper typing
+import { Value } from "react-calendar/dist/cjs/shared/types";
 
 // Add DialogHeader component
-const DialogHeader = ({ children }: { children: React.ReactNode }) => (
+const DialogHeader = ({ children }: { children: React.ReactNode }): JSX.Element => (
   <div className="flex flex-col space-y-1.5 text-center sm:text-left">
     {children}
   </div>
@@ -35,37 +33,30 @@ interface PlanDayModalProps {
   onOpenChange: (open: boolean) => void;
 }
 
-export function PlanDayModal({ open, onOpenChange }: PlanDayModalProps) {
+export function PlanDayModal({ open, onOpenChange }: PlanDayModalProps): JSX.Element {
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);
   const [plan, setPlan] = useState<ScheduledTask[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  // Use exact signature from Calendar component's onChange prop
-  // This is the key fix for the type error
-  const handleCalendarChange = (
-    value: Date | Date[] | null,
-    event: MouseEvent<HTMLButtonElement, MouseEvent>
-  ): void => {
+  // Create a type-safe handler for the Calendar component
+  const handleDateChange = (value: Value): void => {
     if (value instanceof Date) {
       setSelectedDate(value);
     } else if (Array.isArray(value) && value.length > 0 && value[0] instanceof Date) {
       setSelectedDate(value[0]);
-    } else {
-      setSelectedDate(undefined);
     }
   };
 
   const generatePlan = async (): Promise<void> => {
     if (!selectedDate) return;
-    
-    // Use a clone of the date to avoid mutating the state
-    const planDate = new Date(selectedDate.getTime());
-    
+
     setIsLoading(true);
     try {
-      console.log("Generating plan for:", planDate.toISOString());
+      // For deployment, we should use mock data instead of real API calls
+      // that won't work in production
+      console.log("Generating plan for:", selectedDate.toISOString());
       
-      // Create a new date for each time slot to avoid mutation
+      // Sample mock data
       const mockPlan: ScheduledTask[] = [
         {
           assignment: {
@@ -73,8 +64,8 @@ export function PlanDayModal({ open, onOpenChange }: PlanDayModalProps) {
             points_possible: 100
           },
           timeBlock: {
-            start: new Date(planDate.getTime()),
-            end: new Date(planDate.getTime())
+            start: new Date(selectedDate.getFullYear(), selectedDate.getMonth(), selectedDate.getDate(), 9, 0),
+            end: new Date(selectedDate.getFullYear(), selectedDate.getMonth(), selectedDate.getDate(), 10, 30)
           },
           priority: 1
         },
@@ -84,20 +75,34 @@ export function PlanDayModal({ open, onOpenChange }: PlanDayModalProps) {
             points_possible: 50
           },
           timeBlock: {
-            start: new Date(planDate.getTime()),
-            end: new Date(planDate.getTime())
+            start: new Date(selectedDate.getFullYear(), selectedDate.getMonth(), selectedDate.getDate(), 13, 0),
+            end: new Date(selectedDate.getFullYear(), selectedDate.getMonth(), selectedDate.getDate(), 15, 0)
           },
           priority: 2
         }
       ];
       
-      // Set hours after creating the dates to avoid mutating shared dates
-      mockPlan[0].timeBlock.start.setHours(9, 0);
-      mockPlan[0].timeBlock.end.setHours(10, 30);
-      mockPlan[1].timeBlock.start.setHours(13, 0);
-      mockPlan[1].timeBlock.end.setHours(15, 0);
-      
       setPlan(mockPlan);
+      
+      // Comment out actual API call that won't work in production
+      /*
+      const response = await fetch(
+        `http://localhost:7777/api/assignments/daily-agenda?user_id=55141&date=${selectedDate.toISOString()}`,
+        {
+          method: "GET",
+          headers: {
+            Accept: "application/json",
+          },
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to generate plan");
+      }
+
+      const data = await response.json();
+      setPlan(data);
+      */
     } catch (error) {
       console.error("Failed to generate plan:", error);
     } finally {
@@ -121,8 +126,8 @@ export function PlanDayModal({ open, onOpenChange }: PlanDayModalProps) {
 
           <div className="space-y-4">
             <Calendar
-              onChange={handleCalendarChange} // Using the fixed handler
-              value={selectedDate || null} // Ensure null is passed when undefined
+              onChange={handleDateChange}
+              value={selectedDate || null}
               className="rounded-md border w-full"
             />
             <Button
@@ -140,12 +145,12 @@ export function PlanDayModal({ open, onOpenChange }: PlanDayModalProps) {
                   <div key={index} className="p-2 border rounded-md">
                     <div className="font-medium">{task.assignment.title}</div>
                     <div className="text-sm text-muted-foreground">
-                      {task.timeBlock.start.toLocaleTimeString([], {
+                      {new Date(task.timeBlock.start).toLocaleTimeString([], {
                         hour: "2-digit",
                         minute: "2-digit",
                       })}{" "}
                       -
-                      {task.timeBlock.end.toLocaleTimeString([], {
+                      {new Date(task.timeBlock.end).toLocaleTimeString([], {
                         hour: "2-digit",
                         minute: "2-digit",
                       })}
