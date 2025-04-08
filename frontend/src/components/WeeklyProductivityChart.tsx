@@ -1,4 +1,5 @@
 "use client";
+import React from "react";
 import {
   BarChart,
   Bar,
@@ -8,7 +9,18 @@ import {
   ResponsiveContainer,
 } from "recharts";
 
-const WeeklyProductivityChart = ({ data }) => {
+// Define an interface for the data structure
+interface ProductivityData {
+  day: string;
+  hours: number;
+}
+
+// Add proper type for the component props
+interface WeeklyProductivityChartProps {
+  data: ProductivityData[];
+}
+
+const WeeklyProductivityChart = ({ data }: WeeklyProductivityChartProps): React.ReactElement => {
   const totalHours = data.reduce((sum, d) => sum + d.hours, 0).toFixed(1);
 
   return (
