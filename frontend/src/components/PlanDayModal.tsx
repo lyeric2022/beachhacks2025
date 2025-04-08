@@ -1,16 +1,14 @@
 "use client";
 
-import { useState } from "react";
+import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import * as Dialog from "@radix-ui/react-dialog";
 import { X } from "lucide-react";
 import { Calendar } from "react-calendar";
 import "react-calendar/dist/Calendar.css";
-// Remove the problematic import 
-// import { Value } from "react-calendar/dist/cjs/shared/types";
 
-// Add DialogHeader component
-const DialogHeader = ({ children }: { children: React.ReactNode }): JSX.Element => (
+// Add DialogHeader component with correct return type
+const DialogHeader = ({ children }: { children: React.ReactNode }): React.ReactElement => (
   <div className="flex flex-col space-y-1.5 text-center sm:text-left">
     {children}
   </div>
@@ -33,7 +31,7 @@ interface PlanDayModalProps {
   onOpenChange: (open: boolean) => void;
 }
 
-export function PlanDayModal({ open, onOpenChange }: PlanDayModalProps): JSX.Element {
+export function PlanDayModal({ open, onOpenChange }: PlanDayModalProps): React.ReactElement {
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);
   const [plan, setPlan] = useState<ScheduledTask[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -83,26 +81,6 @@ export function PlanDayModal({ open, onOpenChange }: PlanDayModalProps): JSX.Ele
       ];
       
       setPlan(mockPlan);
-      
-      // Comment out actual API call that won't work in production
-      /*
-      const response = await fetch(
-        `http://localhost:7777/api/assignments/daily-agenda?user_id=55141&date=${selectedDate.toISOString()}`,
-        {
-          method: "GET",
-          headers: {
-            Accept: "application/json",
-          },
-        }
-      );
-
-      if (!response.ok) {
-        throw new Error("Failed to generate plan");
-      }
-
-      const data = await response.json();
-      setPlan(data);
-      */
     } catch (error) {
       console.error("Failed to generate plan:", error);
     } finally {
@@ -126,7 +104,7 @@ export function PlanDayModal({ open, onOpenChange }: PlanDayModalProps): JSX.Ele
 
           <div className="space-y-4">
             <Calendar
-              onChange={handleDateChange}
+              onChange={handleDateChange as any} // Use type assertion as a last resort
               value={selectedDate || null}
               className="rounded-md border w-full"
             />
@@ -145,12 +123,12 @@ export function PlanDayModal({ open, onOpenChange }: PlanDayModalProps): JSX.Ele
                   <div key={index} className="p-2 border rounded-md">
                     <div className="font-medium">{task.assignment.title}</div>
                     <div className="text-sm text-muted-foreground">
-                      {new Date(task.timeBlock.start).toLocaleTimeString([], {
+                      {task.timeBlock.start.toLocaleTimeString([], {
                         hour: "2-digit",
                         minute: "2-digit",
                       })}{" "}
                       -
-                      {new Date(task.timeBlock.end).toLocaleTimeString([], {
+                      {task.timeBlock.end.toLocaleTimeString([], {
                         hour: "2-digit",
                         minute: "2-digit",
                       })}

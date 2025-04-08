@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -47,7 +47,7 @@ const AssignmentCheckbox = ({
   status,
   toggleStatus,
   refreshAssignments,
-}: AssignmentCheckboxProps): JSX.Element => {
+}: AssignmentCheckboxProps): React.ReactElement => {
   const [isChecked, setIsChecked] = useState<boolean>(status === "Completed");
   const [editModal, setEditModal] = useState<boolean>(false);
   const [editingAssignment, setEditingAssignment] = useState<{

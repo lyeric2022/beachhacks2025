@@ -1,7 +1,7 @@
 "use client";
 
+import React, { useState, useEffect, useRef } from "react";
 import { updateSession } from "@/app/api/sessionApi";
-import { useState, useEffect, useRef } from "react";
 
 // Define interfaces for the component props and task object
 interface Task {
@@ -26,7 +26,7 @@ interface TimerTaskCardProps {
   onUpdate: (updatedTask: Task, id: number) => Promise<void>;
 }
 
-const TimerTaskCard = ({ task, onUpdate }: TimerTaskCardProps): JSX.Element => {
+const TimerTaskCard = ({ task, onUpdate }: TimerTaskCardProps): React.ReactElement => {
   const [status, setStatus] = useState<string>(task.status);
   const [startTime, setStartTime] = useState<Date | null>(
     task.start_time ? new Date(task.start_time) : null
