@@ -6,7 +6,10 @@ import * as Dialog from "@radix-ui/react-dialog";
 import { X } from "lucide-react";
 import { Calendar } from "react-calendar";
 import "react-calendar/dist/Calendar.css";
-type Value = Date | [Date, Date] | null; // Define Value type locally
+import { MouseEvent } from "react";
+
+// Import the exact type from react-calendar
+// Or use the complete function signature directly
 
 // Add DialogHeader component
 const DialogHeader = ({ children }: { children: React.ReactNode }) => (
@@ -37,29 +40,32 @@ export function PlanDayModal({ open, onOpenChange }: PlanDayModalProps) {
   const [plan, setPlan] = useState<ScheduledTask[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  // Create a handler function for the Calendar onChange
-  const handleDateChange = (value: Value): void => {
-    // Check if the value is a Date and set it
+  // Use exact signature from Calendar component's onChange prop
+  // This is the key fix for the type error
+  const handleCalendarChange = (
+    value: Date | Date[] | null,
+    event: MouseEvent<HTMLButtonElement, MouseEvent>
+  ): void => {
     if (value instanceof Date) {
       setSelectedDate(value);
     } else if (Array.isArray(value) && value.length > 0 && value[0] instanceof Date) {
-      // Handle date range case (take the first date)
       setSelectedDate(value[0]);
     } else {
-      // Handle null or undefined
       setSelectedDate(undefined);
     }
   };
 
   const generatePlan = async (): Promise<void> => {
     if (!selectedDate) return;
-
+    
+    // Use a clone of the date to avoid mutating the state
+    const planDate = new Date(selectedDate.getTime());
+    
     setIsLoading(true);
     try {
-      // Mock data directly instead of making an API call
-      console.log("Generating plan for:", selectedDate.toISOString());
+      console.log("Generating plan for:", planDate.toISOString());
       
-      // Create some mock data instead of fetching
+      // Create a new date for each time slot to avoid mutation
       const mockPlan: ScheduledTask[] = [
         {
           assignment: {
@@ -67,8 +73,8 @@ export function PlanDayModal({ open, onOpenChange }: PlanDayModalProps) {
             points_possible: 100
           },
           timeBlock: {
-            start: new Date(selectedDate.setHours(9, 0)),
-            end: new Date(selectedDate.setHours(10, 30))
+            start: new Date(planDate.getTime()),
+            end: new Date(planDate.getTime())
           },
           priority: 1
         },
@@ -78,12 +84,18 @@ export function PlanDayModal({ open, onOpenChange }: PlanDayModalProps) {
             points_possible: 50
           },
           timeBlock: {
-            start: new Date(selectedDate.setHours(13, 0)),
-            end: new Date(selectedDate.setHours(15, 0))
+            start: new Date(planDate.getTime()),
+            end: new Date(planDate.getTime())
           },
           priority: 2
         }
       ];
+      
+      // Set hours after creating the dates to avoid mutating shared dates
+      mockPlan[0].timeBlock.start.setHours(9, 0);
+      mockPlan[0].timeBlock.end.setHours(10, 30);
+      mockPlan[1].timeBlock.start.setHours(13, 0);
+      mockPlan[1].timeBlock.end.setHours(15, 0);
       
       setPlan(mockPlan);
     } catch (error) {
@@ -109,8 +121,8 @@ export function PlanDayModal({ open, onOpenChange }: PlanDayModalProps) {
 
           <div className="space-y-4">
             <Calendar
-              onChange={handleDateChange} // Use our custom handler
-              value={selectedDate}
+              onChange={handleCalendarChange} // Using the fixed handler
+              value={selectedDate || null} // Ensure null is passed when undefined
               className="rounded-md border w-full"
             />
             <Button
@@ -128,12 +140,12 @@ export function PlanDayModal({ open, onOpenChange }: PlanDayModalProps) {
                   <div key={index} className="p-2 border rounded-md">
                     <div className="font-medium">{task.assignment.title}</div>
                     <div className="text-sm text-muted-foreground">
-                      {new Date(task.timeBlock.start).toLocaleTimeString([], {
+                      {task.timeBlock.start.toLocaleTimeString([], {
                         hour: "2-digit",
                         minute: "2-digit",
                       })}{" "}
                       -
-                      {new Date(task.timeBlock.end).toLocaleTimeString([], {
+                      {task.timeBlock.end.toLocaleTimeString([], {
                         hour: "2-digit",
                         minute: "2-digit",
                       })}
