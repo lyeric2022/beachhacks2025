@@ -199,7 +199,7 @@ const ProductivityPage = (): React.JSX.Element => {
                       await updateSession(id, {
                         status: updatedTask.status,
                         is_active: updatedTask.is_active,
-                        end_time: updatedTask.end_time,
+                        end_time: updatedTask.end_time ?? undefined,
                         duration: updatedTask.duration,
                       });
                     } catch (err) {
