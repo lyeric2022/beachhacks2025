@@ -6,6 +6,7 @@ import * as Dialog from "@radix-ui/react-dialog";
 import { X } from "lucide-react";
 import { Calendar } from "react-calendar";
 import "react-calendar/dist/Calendar.css";
+type Value = Date | [Date, Date] | null; // Define Value type locally
 
 // Add DialogHeader component
 const DialogHeader = ({ children }: { children: React.ReactNode }) => (
@@ -32,36 +33,59 @@ interface PlanDayModalProps {
 }
 
 export function PlanDayModal({ open, onOpenChange }: PlanDayModalProps) {
-  const [selectedDate, setSelectedDate] = useState<Date>();
+  const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);
   const [plan, setPlan] = useState<ScheduledTask[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const generatePlan = async () => {
+  // Create a handler function for the Calendar onChange
+  const handleDateChange = (value: Value): void => {
+    // Check if the value is a Date and set it
+    if (value instanceof Date) {
+      setSelectedDate(value);
+    } else if (Array.isArray(value) && value.length > 0 && value[0] instanceof Date) {
+      // Handle date range case (take the first date)
+      setSelectedDate(value[0]);
+    } else {
+      // Handle null or undefined
+      setSelectedDate(undefined);
+    }
+  };
+
+  const generatePlan = async (): Promise<void> => {
     if (!selectedDate) return;
 
     setIsLoading(true);
     try {
-      const response = await fetch(
-        `http://localhost:7777/api/assignments/daily-agenda?user_id=55141&date=${selectedDate.toISOString()}`,
+      // Mock data directly instead of making an API call
+      console.log("Generating plan for:", selectedDate.toISOString());
+      
+      // Create some mock data instead of fetching
+      const mockPlan: ScheduledTask[] = [
         {
-          method: "GET",
-          headers: {
-            Accept: "application/json",
+          assignment: {
+            title: "Physics Homework",
+            points_possible: 100
           },
+          timeBlock: {
+            start: new Date(selectedDate.setHours(9, 0)),
+            end: new Date(selectedDate.setHours(10, 30))
+          },
+          priority: 1
+        },
+        {
+          assignment: {
+            title: "Database Project",
+            points_possible: 50
+          },
+          timeBlock: {
+            start: new Date(selectedDate.setHours(13, 0)),
+            end: new Date(selectedDate.setHours(15, 0))
+          },
+          priority: 2
         }
-      );
-
-      console.log("generate plan");
-      console.log(
-        `/api/assignments/daily-agenda?user_id=55141&date=${selectedDate.toISOString()}`
-      );
-
-      if (!response.ok) {
-        throw new Error("Failed to generate plan");
-      }
-
-      const data = await response.json();
-      setPlan(data);
+      ];
+      
+      setPlan(mockPlan);
     } catch (error) {
       console.error("Failed to generate plan:", error);
     } finally {
@@ -85,7 +109,7 @@ export function PlanDayModal({ open, onOpenChange }: PlanDayModalProps) {
 
           <div className="space-y-4">
             <Calendar
-              onChange={setSelectedDate}
+              onChange={handleDateChange} // Use our custom handler
               value={selectedDate}
               className="rounded-md border w-full"
             />

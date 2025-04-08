@@ -3,20 +3,43 @@
 import { updateSession } from "@/app/api/sessionApi";
 import { useState, useEffect, useRef } from "react";
 
-const TimerTaskCard = ({ task, onUpdate }) => {
-  const [status, setStatus] = useState(task.status);
-  const [startTime, setStartTime] = useState(
+// Define interfaces for the component props and task object
+interface Task {
+  id: number;
+  assignment_id: number;
+  user_id: number;
+  duration: number;
+  start_time?: string;
+  end_time?: string | null;
+  status: string;
+  is_active: boolean;
+  assignments: {
+    title: string;
+    courses: {
+      title: string;
+    };
+  };
+}
+
+interface TimerTaskCardProps {
+  task: Task;
+  onUpdate: (updatedTask: Task, id: number) => Promise<void>;
+}
+
+const TimerTaskCard = ({ task, onUpdate }: TimerTaskCardProps): JSX.Element => {
+  const [status, setStatus] = useState<string>(task.status);
+  const [startTime, setStartTime] = useState<Date | null>(
     task.start_time ? new Date(task.start_time) : null
   );
-  const [endTime, setEndTime] = useState(
+  const [endTime, setEndTime] = useState<Date | null>(
     task.end_time ? new Date(task.end_time) : null
   );
 
-  const [baseElapsedSeconds, setBaseElapsedSeconds] = useState(
+  const [baseElapsedSeconds, setBaseElapsedSeconds] = useState<number>(
     task.duration || 0
   );
-  const [liveElapsed, setLiveElapsed] = useState(0); // Live ticking
-  const intervalRef = useRef(null);
+  const [liveElapsed, setLiveElapsed] = useState<number>(0); // Live ticking
+  const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     console.log("⏱️ Timer Debug Info:");
@@ -36,17 +59,14 @@ const TimerTaskCard = ({ task, onUpdate }) => {
 
     // Only start ticking if active
     if (task.is_active && task.status === "In Progress") {
-      const start = new Date(task.start_time).getTime();
+      const start = new Date(task.start_time || new Date()).getTime();
       const now = Date.now();
       const resumeSeconds = Math.floor((now - start) / 1000);
 
       setLiveElapsed(resumeSeconds);
 
       intervalRef.current = setInterval(() => {
-        setLiveElapsed((prev) => {
-          const next = prev + 1;
-          return next;
-        });
+        setLiveElapsed((prev) => prev + 1);
       }, 1000);
     }
 
@@ -62,64 +82,21 @@ const TimerTaskCard = ({ task, onUpdate }) => {
     console.log("live", liveElapsed);
     const total = baseElapsedSeconds + liveElapsed;
     console.log(total);
-    if (liveElapsed > 0 && liveElapsed % 30 == 0) {
+    if (liveElapsed > 0 && liveElapsed % 30 === 0) { // Use strict equality
       console.log("updating");
       updateSession(task.id, { duration: total }).catch((err) =>
         console.error("Failed to update duration:", err)
       );
     }
-  }, [liveElapsed]);
+  }, [liveElapsed, baseElapsedSeconds, task.id]);
 
-  // useEffect(() => {
-  //   let total = task.duration || 0;
-
-  //   if (task.start_time) {
-  //     const start = new Date(task.start_time);
-  //     setStartTime(start);
-
-  //     // 🧠 If the task is currently active, calculate how much time has passed since start_time
-  //     if (task.is_active && task.status === "In Progress") {
-  //       const now = Date.now();
-  //       const elapsedSinceStart = Math.floor((now - start.getTime()) / 1000);
-  //       setLiveElapsed(elapsedSinceStart);
-
-  //       // Start ticking
-  //       if (!intervalId) {
-  //         const interval = setInterval(() => {
-  //           setLiveElapsed((prev) => prev + 1);
-  //         }, 1000);
-  //         setIntervalId(interval);
-  //       }
-  //     }
-  //   }
-  //   if (task.end_time) {
-  //     setEndTime(new Date(task.end_time));
-  //   }
-
-  //   setBaseElapsedSeconds(total);
-  // }, [task]);
-
-  // useEffect(() => {
-  //   const hasActive = task.sessions?.some((s) => s.is_active);
-  //   if (hasActive && status === "In Progress" && !intervalId) {
-  //     const interval = setInterval(() => {
-  //       setLiveElapsed((prev) => prev + 1);
-  //     }, 1000);
-  //     setIntervalId(interval);
-  //   }
-  // }, [task.sessions, status, intervalId]);
-
-  // useEffect(() => {
-  //   return () => clearInterval(intervalRef.current);
-  // }, []);
-
-  const formatDuration = (seconds) => {
+  const formatDuration = (seconds: number): string => {
     const hrs = Math.floor(seconds / 3600);
     const mins = Math.floor((seconds % 3600) / 60);
     return `${hrs}h ${mins}m`;
   };
 
-  const startTimer = async () => {
+  const startTimer = async (): Promise<void> => {
     const now = new Date();
     setStatus("In Progress");
     setEndTime(null);
@@ -145,9 +122,11 @@ const TimerTaskCard = ({ task, onUpdate }) => {
     }
   };
 
-  const pauseTimer = async () => {
-    clearInterval(intervalRef.current);
-    intervalRef.current = null;
+  const pauseTimer = async (): Promise<void> => {
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+      intervalRef.current = null;
+    }
 
     const now = new Date();
     const total = baseElapsedSeconds + liveElapsed;
@@ -169,9 +148,11 @@ const TimerTaskCard = ({ task, onUpdate }) => {
     }
   };
 
-  const stopTimer = async () => {
-    clearInterval(intervalRef.current);
-    intervalRef.current = null;
+  const stopTimer = async (): Promise<void> => {
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+      intervalRef.current = null;
+    }
 
     const now = new Date();
     const total = baseElapsedSeconds + liveElapsed;
